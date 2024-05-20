@@ -1,4 +1,9 @@
 package org.example.capstonebackend.repository;
 
-public interface IIngredientRepository {
+import org.example.capstonebackend.model.Ingredient;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface IIngredientRepository extends JpaRepository<Ingredient, Integer> {
 }
