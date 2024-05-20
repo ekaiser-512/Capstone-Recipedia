@@ -17,7 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class Auth {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer authId;
+    private Integer id;
     private String userEmail;
     private String userPassword;
+
+    public Object getEmail() {
+        return null;
+    }
 }

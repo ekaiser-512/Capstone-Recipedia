@@ -11,6 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -45,7 +47,7 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(authTestUtilities.authToJson(authTestUtilities.mockAuth)))
             .andExpect(status().isCreated()) //Expecting 201
-            .andExpect(jsonPath("$.email").value(authTestUtilities.mockAuth));
+            .andExpect((ResultMatcher) jsonPath("$.email").value(authTestUtilities.mockAuth.getEmail())); // Assuming you want to verify some response content
         //assert
         verify(authService).addAuthByEmail(any(Auth.class));
     }
