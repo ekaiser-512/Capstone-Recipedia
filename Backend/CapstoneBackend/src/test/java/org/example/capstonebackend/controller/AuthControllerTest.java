@@ -43,9 +43,9 @@ public class AuthControllerTest {
         //act
         mockMvc.perform(post("/auths/userEmail/{userEmail}", AuthTestUtilities.email)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(authTestUtilities.authToJson(authTestUtilities.mockAuth))
+                .content(authTestUtilities.authToJson(authTestUtilities.mockAuth)))
             .andExpect(status().isCreated()) //Expecting 201
-            .andExpect(jsonPath("$.email").value(authTestUtilities.mockAuth)));
+            .andExpect(jsonPath("$.email").value(authTestUtilities.mockAuth));
         //assert
         verify(authService).addAuthByEmail(any(Auth.class));
     }
