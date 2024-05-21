@@ -19,15 +19,34 @@ public class UserService {
 
 //CREATE
     //add user
-public User addUser(User user) throws Exception {
-    // Check if a post with the same title already exists
-    Optional<Object> userExists = Optional.of(userRepository.findById(user.getId()));
+    public User addUser(User user) throws Exception {
+        // Check if a post with the same title already exists
+        Optional<Object> userExists = Optional.of(userRepository.findById(user.getId()));
 
-    // If a post with the same title exists, throw an exception
-    if(userExists.isPresent()) {
-        throw new Exception("user with id " + user.getId() + " already exists");
+        // If a post with the same title exists, throw an exception
+        if(userExists.isPresent()) {
+            throw new Exception("user with id " + user.getId() + " already exists");
+        }
+        // If no post with the same title exists, save the new post and return it
+        return userRepository.save(user);
     }
-    // If no post with the same title exists, save the new post and return it
-    return userRepository.save(user);
-}
+
+//READ
+    //get user by id
+    public User getUserById(Integer id) throws Exception {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User with id " + id + " not found"));
+    }
+
+
+
+//UPDATE
+
+
+
+//DELETE
+    //delete user
+    public void deleteUser(int id) {
+        userRepository.deleteById(id);
+    }
 }

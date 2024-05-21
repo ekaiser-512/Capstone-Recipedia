@@ -5,9 +5,7 @@ import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -20,7 +18,7 @@ public class UserController {
 
 //CREATE
     //create user
-    @PostMapping("/users")
+    @PostMapping("/users") //todo getting error when trying to add user in postman stating that already exists?
     public ResponseEntity<User> addUser (@RequestBody User user) throws Exception {
         try {
             //Trying to add post
@@ -32,5 +30,30 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+//READ
+    //get user by id
+@GetMapping("users/{id}")
+public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+        try {
+            User user = userService.getUserById(id);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+}
+
+
+//UPDATE
+
+
+
+//DELETE
+    //delete user
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+    }
+
 
 }
