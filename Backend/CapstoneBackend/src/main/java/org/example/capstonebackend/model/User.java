@@ -16,7 +16,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer userId;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String datOfBirth;
