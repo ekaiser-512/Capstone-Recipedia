@@ -1,6 +1,7 @@
 package org.example.capstonebackend.service;
 
 import org.example.capstonebackend.model.Book;
+import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.repository.IBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class BookService {
 
     private final IBookRepository bookRepository;
+    private final ICategoryRepository categoryRepository;
 
     @Autowired
     public BookService(IBookRepository bookRepository) {
@@ -18,6 +20,8 @@ public class BookService {
     }
 
 //CREATE (todo could this be updated to find by userId "book by user Id already exists")
+
+    //add book
     public Book addBook(Book book) throws Exception {
         // Check if a post with the same title already exists
        Optional <Object> bookExists = Optional.of(bookRepository.findById(book.getId()));
@@ -28,6 +32,12 @@ public class BookService {
         }
         // If no post with the same title exists, save the new post and return it
         return bookRepository.save(book);
+    }
+
+    //add category to book
+    public Book addCategoryToBook(Integer id, Integer categoryId) throws Exception {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new Exception("Book with id " + id + " not found"));
+        Category category = categoryRepository.findById(categoryId).orElseThrow
     }
 
 //READ
