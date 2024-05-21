@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.Arrays;
 import java.util.List;
@@ -232,6 +233,17 @@ public class AuthControllerTest {
         verify(authService).getAuthById(authTestUtilities.mockAuth.getId());
     }
 
+//DELETE
+    //delete auth
+    @Test
+    public void testDeleteAuth() throws Exception {
+        int id = 1;
+        doNothing().when(authService).deleteAuth(anyInt());
 
+        ResultActions resultActions = mockMvc.perform(delete("/auths/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON));
+            resultActions.andExpect(status().isOk());
 
+        verify(authService).deleteAuth(id);
+    }
 }

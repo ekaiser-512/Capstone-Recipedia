@@ -106,6 +106,13 @@ public class AuthServiceTest {
     }
 
 //DELETE
-    //delete auth lives within User class because you can only delete auth if you delete the full user.
+    //delete auth
+    @Test
+    public void testDeleteAuth() {
+        doNothing().when(authRepository).deleteById(anyInt());
 
+        authService.deleteAuth(authTestUtilities.mockAuth.getId());
+
+        verify(authRepository).deleteById(authTestUtilities.mockAuth.getId());
+    }
 }

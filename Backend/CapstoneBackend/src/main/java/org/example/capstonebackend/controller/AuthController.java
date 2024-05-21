@@ -82,5 +82,9 @@ public class AuthController {
     }
 
 //DELETE
-    //Will live under User as this is tied to it.
+    //delete auth
+    @DeleteMapping("/auths/{id}")
+    public void deleteAuth(@PathVariable int id) {
+        authService.deleteAuth(id);
+    }
 }

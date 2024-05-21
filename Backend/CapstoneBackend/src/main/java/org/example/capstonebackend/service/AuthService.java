@@ -4,6 +4,7 @@ import org.example.capstonebackend.model.Auth;
 import org.example.capstonebackend.repository.IAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,9 @@ public class AuthService {
     }
 
 //DELETE
-    //Will live under User as this is tied to it.
+    //delete Auth
+    public void deleteAuth(int id) {
+        authRepository.deleteById(id);
+    }
 
 }
