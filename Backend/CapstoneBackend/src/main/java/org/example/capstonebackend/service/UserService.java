@@ -41,7 +41,7 @@ public class UserService {
 
     //get user by email
     public User getUserByEmail(String email) throws Exception {
-        return(User) userRepository.findByEmail(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User with email " + email + " not found"));
     }
 
