@@ -19,7 +19,7 @@ public class Auth {
     private String email;
     private String password;
 
-    public String getEmail() {
-        return null;
-    }
+//    public String getEmail() {
+//        return null;
+//    }
 }

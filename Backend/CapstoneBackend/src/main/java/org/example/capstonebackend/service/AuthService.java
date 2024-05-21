@@ -22,7 +22,7 @@ public class AuthService {
 //CREATE
 
     //add Auth
-    public Auth addAuth(Auth auth) throws Exception {
+    public Auth userSignup(Auth auth) throws Exception {
         //check if an auth with the same email already exists
         Optional<Object> authExists = authRepository.findByEmail(auth.getEmail());
 

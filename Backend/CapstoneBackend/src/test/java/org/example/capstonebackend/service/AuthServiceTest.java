@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.example.capstonebackend.components.AuthTestUtilities.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -37,16 +38,16 @@ public class AuthServiceTest {
     //add Auth
         //happy path
     @Test
-    public void testAddAuth() throws Exception {
+    public void testUserSignup() throws Exception {
         //arrange
-        when(authRepository.save(eq(authTestUtilities.mockAuth))).thenReturn(authTestUtilities.mockAuth);
+        when(authRepository.save(eq(mockAuth))).thenReturn(mockAuth);
 
         //act
-        Auth result = authService.addAuth(authTestUtilities.mockAuth);
+        Auth result = authService.userSignup(mockAuth);
 
         //assert
-        assertEquals(authTestUtilities.mockAuth, result);
-        verify(authRepository).save(authTestUtilities.mockAuth);
+        assertEquals(mockAuth, result);
+        verify(authRepository).save(mockAuth);
     }
 
         //sad path
@@ -55,13 +56,13 @@ public class AuthServiceTest {
         //arrange
         when(authRepository.existsById(any())).thenReturn(true);
         when(authRepository.save(any())).thenReturn(null);
-        when(authRepository.findByEmail(any())).thenReturn(Optional.of(authTestUtilities.mockAuth));
+        when(authRepository.findByEmail(any())).thenReturn(Optional.of(mockAuth));
 
         assertThrows(Exception.class, () -> {
-            authService.addAuth(authTestUtilities.mockAuth);
+            authService.userSignup(mockAuth);
         });
 
-        verify(authRepository, times(0)).save(authTestUtilities.mockAuth);
+        verify(authRepository, times(0)).save(mockAuth);
     }
 
 //READ
@@ -69,23 +70,23 @@ public class AuthServiceTest {
         //happy path
     @Test
     public void testGetAuthById() throws Exception {
-        when(authRepository.findById(anyInt())).thenReturn(Optional.of(authTestUtilities.mockAuth));
+        when(authRepository.findById(anyInt())).thenReturn(Optional.of(mockAuth));
 
-        Auth result = authService.getAuthById(authTestUtilities.mockAuth.getId());
+        Auth result = authService.getAuthById(mockAuth.getId());
 
-        assertEquals(authTestUtilities.mockAuth, result);
+        assertEquals(mockAuth, result);
         verify(authRepository).findById(anyInt());
     }
         //sad path
     @Test
     public void testGetAuthById_IdNotFound() throws Exception {
-        when(authRepository.findById(authTestUtilities.mockAuth.getId())).thenReturn(Optional.empty());
+        when(authRepository.findById(mockAuth.getId())).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
-            authService.getAuthById(authTestUtilities.mockAuth.getId());
+            authService.getAuthById(mockAuth.getId());
         });
 
-        verify(authRepository).findById(authTestUtilities.mockAuth.getId());
+        verify(authRepository).findById(mockAuth.getId());
     }
 
     //get all auths
@@ -111,8 +112,8 @@ public class AuthServiceTest {
     public void testDeleteAuth() {
         doNothing().when(authRepository).deleteById(anyInt());
 
-        authService.deleteAuth(authTestUtilities.mockAuth.getId());
+        authService.deleteAuth(mockAuth.getId());
 
-        verify(authRepository).deleteById(authTestUtilities.mockAuth.getId());
+        verify(authRepository).deleteById(mockAuth.getId());
     }
 }

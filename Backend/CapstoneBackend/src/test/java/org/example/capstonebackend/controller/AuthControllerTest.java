@@ -9,8 +9,10 @@ import org.example.capstonebackend.service.AuthService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.example.capstonebackend.components.AuthTestUtilities.*;
 import static org.example.capstonebackend.components.AuthTestUtilities.authToJson;
 import static org.example.capstonebackend.components.AuthTestUtilities.email;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +38,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(AuthController.class)
+@Import({AuthController.class, AuthTestUtilities.class})
 @WebMvcTest(AuthController.class)
 public class AuthControllerTest {
 
@@ -48,41 +51,42 @@ public class AuthControllerTest {
     @InjectMocks
     private AuthController authController;
 
-    @Inject
+    @InjectMocks
     private AuthTestUtilities authTestUtilities;
+
 
     //CREATE
 
     //add Auth
         //happy path
     @Test
-    void testAddAuth() throws Exception {
+    void testUserSignup() throws Exception {
         //arrange
-        when(authService.addAuth(any(Auth.class))).thenReturn(authTestUtilities.mockAuth);
+        when(authService.userSignup(any(Auth.class))).thenReturn(mockAuth);
 
         //act
-        ResponseEntity<Auth> response = authController.addAuth(authTestUtilities.mockAuth);
+        ResponseEntity<Auth> response = authController.userSignup(mockAuth);
 
         //assert
-        verify(authService).addAuth(any(Auth.class));
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(authTestUtilities.mockAuth, response.getBody());
+        assertEquals(mockAuth, response.getBody());
+        verify(authService).userSignup(any(Auth.class));
     }
 
         //sad path
     @Test
     void testAddAuth_UserExists() throws Exception {
         //arrange
-        when(authService.addAuth(any())).thenThrow(new Exception("user with email " + authTestUtilities.mockAuth.getEmail() + " already exists"));
+        when(authService.userSignup(any())).thenThrow(new Exception("user with email " + mockAuth.getEmail() + " already exists"));
 
         //act
         mockMvc.perform(post("/auths")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(authToJson(authTestUtilities.mockAuth)))
+                .content(authToJson(mockAuth)))
                 .andExpect(status().isBadRequest());
 
         //assert
-        verify(authService).addAuth(any());
+        verify(authService).userSignup(any());
 
     }
 
@@ -93,7 +97,7 @@ public class AuthControllerTest {
     public void testGetAuthById() throws Exception {
         //arrange
         int id = 1;
-        when(authService.getAuthById((id))).thenReturn(authTestUtilities.mockAuth);
+        when(authService.getAuthById((id))).thenReturn(mockAuth);
 
         //act
         ResultActions resultActions = mockMvc.perform(get("/auths/{id}", id));
@@ -109,15 +113,15 @@ public class AuthControllerTest {
     @Test
     public void testGetAuthById_IdNotFound() throws Exception {
         //arrange
-        when(authService.getAuthById(authTestUtilities.mockAuth.getId())).thenThrow(new Exception("Auth with id " + authTestUtilities.mockAuth.getId() + " not found"));
+        when(authService.getAuthById(mockAuth.getId())).thenThrow(new Exception("Auth with id " + mockAuth.getId() + " not found"));
 
         //act
-        mockMvc.perform(get("/auths/{id}", authTestUtilities.mockAuth.getId())
+        mockMvc.perform(get("/auths/{id}", mockAuth.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         //assert
-        verify(authService).getAuthById(authTestUtilities.mockAuth.getId());
+        verify(authService).getAuthById(mockAuth.getId());
     }
 
     //getAllAuths
@@ -125,7 +129,7 @@ public class AuthControllerTest {
     @Test
     public void testGetAllAuths() throws Exception {
         //arrange
-        List<Auth> mockAuths = Arrays.asList(authTestUtilities.mockAuth, authTestUtilities.mockAuth);
+        List<Auth> mockAuths = Arrays.asList(mockAuth, mockAuth);
         when(authService.getAllAuths()).thenReturn(mockAuths);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -164,12 +168,12 @@ public class AuthControllerTest {
     @Test
     public void testGetAuthByEmail() throws Exception {
         //arrange
-        when(authService.getAuthByEmail(email)).thenReturn(authTestUtilities.mockAuth);
+        when(authService.getAuthByEmail(email)).thenReturn(mockAuth);
 
         //act
         ResultActions resultActions = mockMvc.perform(get("/auths/email/{email}", email)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(authToJson(authTestUtilities.mockAuth)));
+                .content(authToJson(mockAuth)));
             resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email", Is.is(email)));
 
@@ -209,7 +213,7 @@ public class AuthControllerTest {
         //act
         ResultActions resultActions = mockMvc.perform(put("/auths/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(authToJson(authTestUtilities.mockAuth)));
+                .content(authToJson(mockAuth)));
             resultActions.andExpect(status().isOk())
                 .andExpect((ResultMatcher) jsonPath("$.email", is("Joey_Doe")))
                 .andExpect((ResultMatcher) jsonPath("$.password", is("joey.doeghy")));
@@ -222,15 +226,15 @@ public class AuthControllerTest {
     @Test
     public void testUpdateAuth_IdDoesNotExist() throws Exception {
         //arrange
-        when(authService.getAuthById(authTestUtilities.mockAuth.getId())).thenThrow(new Exception("User with auth id " + authTestUtilities.mockAuth.getId() + " does not exist"));
+        when(authService.getAuthById(mockAuth.getId())).thenThrow(new Exception("User with auth id " + mockAuth.getId() + " does not exist"));
 
         //act
-        mockMvc.perform(get("/users/{id}", authTestUtilities.mockAuth.getId())
+        mockMvc.perform(get("/users/{id}", mockAuth.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         //assert
-        verify(authService).getAuthById(authTestUtilities.mockAuth.getId());
+        verify(authService).getAuthById(mockAuth.getId());
     }
 
 //DELETE

@@ -15,9 +15,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 @Component
 public class AuthTestUtilities {
 
-    static Auth auth = new Auth();
-
-    public final Auth mockAuth = createMockAuth();
+    public static Auth mockAuth = createMockAuth();
 
     public static String email = "test@email.com";
 
@@ -34,7 +32,7 @@ public class AuthTestUtilities {
     }
     public static String authToJson(Auth mockAuth) {
         try {
-            return objectMapper.writeValueAsString(auth);
+            return objectMapper.writeValueAsString(mockAuth);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

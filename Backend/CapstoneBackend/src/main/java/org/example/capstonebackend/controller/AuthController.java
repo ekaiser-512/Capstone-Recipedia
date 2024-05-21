@@ -24,11 +24,14 @@ public class AuthController {
 //CREATE - we want to be able to prevent duplication of email address usage.
 
     //add auth
-    @PostMapping("/auths")
-    public ResponseEntity<Auth> addAuth(@RequestBody Auth auth) throws Exception {
+        //Notify users if the chosen username is already in use.
+        //todo check if the user exists and if so sends back a status of ok as well as the username.
+    @PostMapping("/users/signup")
+    public ResponseEntity<Auth> userSignup (@RequestBody Auth auth) throws Exception {
         try {
             //trying to add auth
-            Auth addedAuth = authService.addAuth(auth);
+            Auth addedAuth = authService.userSignup(auth);
+            //todo add user using user service
             //if successful, return OK(200) response with the added auth
             return ResponseEntity.ok(addedAuth);
         } catch (Exception e) {
@@ -36,6 +39,8 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+
 
 //READ
 
