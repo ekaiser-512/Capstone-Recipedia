@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class UserController {
 
@@ -33,19 +35,34 @@ public class UserController {
 
 //READ
     //get user by id
-@GetMapping("users/{id}")
-public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+    @GetMapping("users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+            try {
+                User user = userService.getUserById(id);
+                return ResponseEntity.ok(user);
+            } catch (Exception e) {
+                return ResponseEntity.notFound().build();
+            }
+    }
+
+    //get all users
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return users;
+    }
+
+//UPDATE
+    //update User
+    @PutMapping("/users/{id}")
+    public ResponseEntity<?> updatedUser(@PathVariable int id, @RequestBody User user) throws Exception {
         try {
-            User user = userService.getUserById(id);
-            return ResponseEntity.ok(user);
+            User updatedUser = userService.updateUser(id, user);
+            return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-}
-
-
-//UPDATE
-
+    }
 
 
 //DELETE

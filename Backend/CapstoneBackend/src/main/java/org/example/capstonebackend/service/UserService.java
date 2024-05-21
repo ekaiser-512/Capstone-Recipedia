@@ -5,6 +5,7 @@ import org.example.capstonebackend.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,11 +39,25 @@ public class UserService {
                 .orElseThrow(() -> new Exception("User with id " + id + " not found"));
     }
 
-
+    //get all users
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
 //UPDATE
+    //update user
+    public User updateUser(int id, User user) throws Exception {
+        User oldUser = userRepository.findById(id).orElse(null);
 
+        if(oldUser == null) {
+            throw new Exception("User with id " + id + " not found");
+        }
+        oldUser.setFirstName(user.getFirstName());
+        oldUser.setLastName(user.getLastName());
+        oldUser.setDatOfBirth(user.getDatOfBirth());
 
+        return userRepository.save(oldUser);
+    }
 
 //DELETE
     //delete user

@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import org.example.capstonebackend.components.UserTestUtilities;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.service.UserService;
+import org.example.capstonebackend.service.UserServiceTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.mockito.InjectMocks;
@@ -25,7 +26,7 @@ import static org.springframework.mock.http.server.reactive.MockServerHttpReques
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(UserController.class)
+@Import({UserController.class, UserServiceTest.class})
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
