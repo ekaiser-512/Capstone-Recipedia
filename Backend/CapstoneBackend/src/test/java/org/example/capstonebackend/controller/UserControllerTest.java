@@ -6,6 +6,7 @@ import org.example.capstonebackend.components.UserTestUtilities;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.service.UserService;
 import org.example.capstonebackend.service.UserServiceTest;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.example.capstonebackend.components.UserTestUtilities.*;
@@ -34,7 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import({UserController.class, UserServiceTest.class})
+@Import({UserController.class, UserTestUtilities.class})
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
 
@@ -103,6 +105,37 @@ public class UserControllerTest {
         verify(userService).getUserById(mockUser.getId());
     }
 
+    //get user by email
+        //happy path
+    @Test
+    public void testGetUserByEmail() throws Exception {
+        String email = "joey_doughy@test.com";
+
+        when(userService.getUserByEmail(email)).thenReturn(mockUser);
+
+        ResultActions resultActions = mockMvc.perform(get("/users/email/{email}", email)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userToJson(mockUser)));
+        resultActions.andExpect(status().isOk())
+                .andExpect(jsonPath("$.email", Is.is(email)))
+                .andExpect(jsonPath("$.username", Is.is("Joe Doe")));
+
+        verify(userService).getUserByEmail(email);
+    }
+        //sad path
+        @Test
+        public void testGetUserByEmail_UserNotFound() throws Exception {
+
+            String badEmail = "notfound@gmail.com";
+            when(userService.getUserByEmail(badEmail)).thenThrow(new Exception("User with email " + badEmail + " does not exist"));
+
+            ResultActions resultActions = mockMvc.perform(get("/users/email/{email}", badEmail)
+                    .contentType(MediaType.APPLICATION_JSON));
+            resultActions.andExpect(status().isNotFound());
+
+            verify(userService).getUserByEmail(badEmail);
+        }
+
     //get all users
         //happy path
     @Test
@@ -132,9 +165,11 @@ public class UserControllerTest {
 
         User updatedUser = new User();
         updatedUser.setId(1);
-        updatedUser.setFirstName("Joe");
+        updatedUser.setFirstName("Updated Joe");
         updatedUser.setLastName("Doe");
         updatedUser.setDatOfBirth("02/01/1992");
+        updatedUser.setEmail("updatedJoey@test.com");
+        updatedUser.setPassword("updatedPassword");
 
         when(userService.updateUser(eq(id), any(User.class))).thenReturn(updatedUser);
 
@@ -143,9 +178,11 @@ public class UserControllerTest {
                 .content(userToJson(mockUser)));
 
         resultActions.andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$.firstName", is("Joe")))
+                .andExpect((ResultMatcher) jsonPath("$.firstName", is("Updated Joe")))
                 .andExpect((ResultMatcher) jsonPath("$.lastName", is("Doe")))
-                .andExpect((ResultMatcher) jsonPath("$.dateOfBirth", is("02/01/1992")));
+                .andExpect((ResultMatcher) jsonPath("$.dateOfBirth", is("02/01/1992")))
+                .andExpect((ResultMatcher) jsonPath("$.email", is("updatedJoey@test.com")))
+                .andExpect((ResultMatcher) jsonPath("$.password", is("updatedPassword")));
 
         verify(userService).updateUser(eq(id), any(User.class));
     }

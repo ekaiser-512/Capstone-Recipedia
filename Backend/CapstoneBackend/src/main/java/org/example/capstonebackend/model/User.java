@@ -20,14 +20,12 @@ public class User {
     private String firstName;
     private String lastName;
     private String datOfBirth;
-
-    //Creating 1:1 relationship between User and Auth
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "auth_id", nullable = false, unique = true)
-    private Auth auth;
+    private String email;
+    private String password;
 
     //Creating 1:N relationship between User and Book
-    @OneToMany(mappedBy = "user")
-    private List<Book> books;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private Book book;
 
 }

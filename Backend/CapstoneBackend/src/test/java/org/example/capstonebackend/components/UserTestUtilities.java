@@ -25,14 +25,20 @@ public class UserTestUtilities {
 
     private static String dateOfBirth = "02/01/1992";
 
+    private static String email = "joey_doughy@test.com";
+
+    private static String password = "mockPassword";
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private static User createMockUser() {
         User user = new User();
         user.setId(1);
-        user.setFirstName("Joe");
-        user.setLastName("Doe");
-        user.setDatOfBirth("02/01/1992");
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setDatOfBirth(dateOfBirth);
+        user.setEmail(email);
+        user.setPassword(password);
         return user;
     }
     public static String userToJson(User mockUser) {
@@ -48,7 +54,9 @@ public class UserTestUtilities {
                 .andExpect((ResultMatcher) jsonPath("$.id", is(mockUser.getId())))
                 .andExpect((ResultMatcher) jsonPath("$.firstName", is(mockUser.getFirstName())))
                 .andExpect((ResultMatcher) jsonPath("$.lastName", is(mockUser.getLastName())))
-                .andExpect((ResultMatcher) jsonPath("$.dateOfBirth", is(mockUser.getDatOfBirth())));
+                .andExpect((ResultMatcher) jsonPath("$.dateOfBirth", is(mockUser.getDatOfBirth())))
+                .andExpect((ResultMatcher) jsonPath("$.email", is(mockUser.getEmail())))
+                .andExpect((ResultMatcher) jsonPath("$.password", is(mockUser.getPassword())));
     }
 
 }

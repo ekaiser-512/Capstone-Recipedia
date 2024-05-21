@@ -1,5 +1,6 @@
 package org.example.capstonebackend.controller;
 
+import org.apache.coyote.Response;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.UserService;
@@ -43,6 +44,17 @@ public class UserController {
             } catch (Exception e) {
                 return ResponseEntity.notFound().build();
             }
+    }
+
+    //get user by email
+    @GetMapping("users/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) throws Exception {
+        try {
+            User user = userService.getUserByEmail(email);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     //get all users

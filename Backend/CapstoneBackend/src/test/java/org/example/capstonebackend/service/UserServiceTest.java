@@ -85,6 +85,32 @@ public class UserServiceTest {
         verify(userRepository).findById(mockUser.getId());
     }
 
+    //get user by email
+    @Test
+    public void testGetUserByEmail() throws Exception {
+        //arrange
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+
+        //act
+        User result = userService.getUserByEmail(mockUser.getEmail());
+
+        //assert
+        assertEquals(mockUser, result);
+        verify(userRepository).findByEmail(anyString());
+    }
+
+        //sad path
+    @Test
+    public void testGetUserByEmail_NotFound() throws Exception {
+        when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.empty());
+
+        assertThrows(Exception.class, () -> {
+            userService.getUserByEmail(mockUser.getEmail());
+        });
+
+        verify(userRepository).findByEmail(mockUser.getEmail());
+    }
+
     //get all users
         //happy path
     @Test
