@@ -17,7 +17,7 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-//CREATE (todo could this be updated to find by userId "book by user Id alreday exists")
+//CREATE (todo could this be updated to find by userId "book by user Id already exists")
     public Book addBook(Book book) throws Exception {
         // Check if a post with the same title already exists
        Optional <Object> bookExists = Optional.of(bookRepository.findById(book.getId()));
@@ -32,5 +32,5 @@ public class BookService {
 
 //READ
     //get book by id
-    public Book 
+    public Book
 }
