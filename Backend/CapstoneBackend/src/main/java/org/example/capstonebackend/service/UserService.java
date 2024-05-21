@@ -22,11 +22,11 @@ public class UserService {
     //add user
     public User addUser(User user) throws Exception {
         // Check if a post with the same title already exists
-        Optional<Object> userExists = Optional.of(userRepository.findById(user.getId()));
+        Optional<User> userExists = userRepository.findByEmail(user.getEmail());
 
         // If a post with the same title exists, throw an exception
         if(userExists.isPresent()) {
-            throw new Exception("user with id " + user.getId() + " already exists");
+            throw new Exception("user with id " + user.getUserId() + " already exists");
         }
         // If no post with the same title exists, save the new post and return it
         return userRepository.save(user);
@@ -60,7 +60,7 @@ public class UserService {
         }
         oldUser.setFirstName(user.getFirstName());
         oldUser.setLastName(user.getLastName());
-        oldUser.setDatOfBirth(user.getDatOfBirth());
+        oldUser.setDateOfBirth(user.getDateOfBirth());
 
         return userRepository.save(oldUser);
     }

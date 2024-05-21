@@ -21,7 +21,7 @@ public class UserController {
 
 //CREATE
     //create user
-    @PostMapping("/users") //todo getting error when trying to add user in postman stating that already exists?
+    @PostMapping("/users") //todo why is DOB null?
     public ResponseEntity<User> addUser (@RequestBody User user) throws Exception {
         try {
             //Trying to add post

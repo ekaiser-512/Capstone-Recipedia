@@ -16,16 +16,16 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer userId;
     private String firstName;
     private String lastName;
-    private String datOfBirth;
+    private String dateOfBirth;
     private String email;
     private String password;
 
     //Creating 1:N relationship between User and Book
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "book_id")
     private Book book;
 
 }
