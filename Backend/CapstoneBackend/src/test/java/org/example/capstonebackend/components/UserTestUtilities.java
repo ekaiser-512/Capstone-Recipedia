@@ -17,7 +17,7 @@ public class UserTestUtilities {
 
     static User user = new User();
 
-    public final User mockUser = createMockUser();
+    public static final User mockUser = createMockUser();
 
     public static String firstName = "Joe";
 

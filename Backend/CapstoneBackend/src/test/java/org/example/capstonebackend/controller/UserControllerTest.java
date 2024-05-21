@@ -1,5 +1,6 @@
 package org.example.capstonebackend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.inject.Inject;
 import org.example.capstonebackend.components.UserTestUtilities;
 import org.example.capstonebackend.model.User;
@@ -17,13 +18,20 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static net.bytebuddy.matcher.ElementMatchers.is;
+import static org.example.capstonebackend.components.UserTestUtilities.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Import({UserController.class, UserServiceTest.class})
@@ -47,16 +55,27 @@ public class UserControllerTest {
         //happy path
     @Test
     public void testAddUser() throws Exception {
-        when(userService.addUser(any(User.class))).thenReturn(userTestUtilities.mockUser);
+        when(userService.addUser(any(User.class))).thenReturn(mockUser);
 
-        ResponseEntity<User> response = userController.addUser(userTestUtilities.mockUser);
+        ResponseEntity<User> response = userController.addUser(mockUser);
 
         verify(userService).addUser(any(User.class));
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(userTestUtilities.mockUser, response.getBody());
+        assertEquals(mockUser, response.getBody());
     }
 
         //sad path
+    @Test
+    public void testAddUser_UserExists() throws Exception {
+        when(userService.addUser(any())).thenThrow(new Exception("User with id " + mockUser.getId() + " already exists"));
+
+        mockMvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userToJson(mockUser)))
+                .andExpect(status().isBadRequest());
+
+        verify(userService).addUser(any());
+    }
 
 //READ
     //get user by id
@@ -64,7 +83,7 @@ public class UserControllerTest {
     @Test
     public void testGetUserById() throws Exception {
         int id = 1;
-        when(userService.getUserById(id)).thenReturn(userTestUtilities.mockUser);
+        when(userService.getUserById(id)).thenReturn(mockUser);
 
         mockMvc.perform(get("users/{id}", id))
                 .andExpect(status().isOk());
@@ -72,10 +91,77 @@ public class UserControllerTest {
         verify(userService).getUserById(id);
     }
 
+        //sad path
+    @Test
+    public void testGetUserById_IdNotFound() throws Exception {
+        when(userService.getUserById(mockUser.getId())).thenThrow(new Exception("User with id " + mockUser.getId() + " not found"));
 
+        mockMvc.perform(get("/users/{id}", mockUser.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        verify(userService).getUserById(mockUser.getId());
+    }
+
+    //get all users
+        //happy path
+    @Test
+    public void testGetAllUsers() throws Exception {
+        List<User> mockUsers = Arrays.asList(mockUser, mockUser);
+
+        when(userService.getAllUsers()).thenReturn(mockUsers);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String mockUsersJson = objectMapper.writeValueAsString(mockUsers);
+
+        mockMvc.perform(get("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mockUsersJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(mockUsers.size()));
+
+        verify(userService).getAllUsers();
+    }
 
 //UPDATE
+    //update user
+        //happy path
+    @Test
+    public void testUpdateUser() throws Exception {
+        int id = 1;
 
+        User updatedUser = new User();
+        updatedUser.setId(1);
+        updatedUser.setFirstName("Joe");
+        updatedUser.setLastName("Doe");
+        updatedUser.setDatOfBirth("02/01/1992");
+
+        when(userService.updateUser(eq(id), any(User.class))).thenReturn(updatedUser);
+
+        ResultActions resultActions = mockMvc.perform(put("users/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userToJson(mockUser)));
+
+        resultActions.andExpect(status().isOk())
+                .andExpect((ResultMatcher) jsonPath("$.firstName", is("Joe")))
+                .andExpect((ResultMatcher) jsonPath("$.lastName", is("Doe")))
+                .andExpect((ResultMatcher) jsonPath("$.dateOfBirth", is("02/01/1992")));
+
+        verify(userService).updateUser(eq(id), any(User.class));
+    }
+
+        //sad path
+    @Test
+    public void TestUpdateUser_IdDoesNotExist() throws Exception {
+        when(userService.updateUser(anyInt(), any(User.class))).thenThrow(new Exception("User with id " + mockUser.getId() + " not found"));
+
+        mockMvc.perform(put("/users/{id}", mockUser.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userToJson(mockUser)))
+                .andExpect(status().isNotFound());
+
+        verify(userService).updateUser(any(Integer.class), any(User.class));
+    }
 
 
 //DELETE
