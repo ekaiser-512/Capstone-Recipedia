@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -20,12 +21,16 @@ public class AuthService {
 //CREATE
 
     //add Auth
-    public boolean addAuthByEmail(Auth auth) {
-        if(authRepository.existsByEmail(auth.getUserEmail())) {
-            return false;
+    public Auth addAuth(Auth auth) throws Exception {
+        //check if an auth with the same email already exists
+        Optional<Object> authExists = authRepository.findByEmail(auth.getEmail());
+
+        //If an auth with the same email exists, throw an exception
+        if(authExists.isPresent()) {
+            throw new Exception("auth with email " + auth.getEmail() + " already exists");
         }
-        authRepository.save(auth);
-        return true;
+        //if no auth with the same email exists save the new auth and return it
+        return authRepository.save(auth);
     }
 
 //READ
@@ -56,8 +61,8 @@ public class AuthService {
         if (oldAuth == null) {
             throw new Exception ("User with authId " + id + " not found");
         }
-        oldAuth.setUserEmail(auth.getUserEmail());
-        oldAuth.setUserPassword(auth.getUserPassword());
+        oldAuth.setEmail(auth.getEmail());
+        oldAuth.setPassword(auth.getPassword());
 
         return authRepository.save(oldAuth);
     }

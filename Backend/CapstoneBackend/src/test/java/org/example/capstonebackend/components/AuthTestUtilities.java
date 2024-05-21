@@ -27,10 +27,9 @@ public class AuthTestUtilities {
 
     private static Auth createMockAuth() {
         Auth auth = new Auth();
-        auth.setAuthId(1);
-        auth.setUserEmail(email);
-        auth.setUserPassword(password);
-
+        auth.setId(1);
+        auth.setEmail(email);
+        auth.setPassword(password);
         return auth;
     }
     public static String authToJson(Auth mockAuth) {
@@ -41,11 +40,11 @@ public class AuthTestUtilities {
         }
     }
 
-    private void compareJsonOutput(ResultActions resultActions) throws Exception {
+    public void compareJsonOutput(ResultActions resultActions) throws Exception {
         resultActions
-                .andExpect((ResultMatcher) jsonPath("$.authId", is(mockAuth.getAuthId())))
-                .andExpect((ResultMatcher) jsonPath("$.userEmail", is(mockAuth.getUserEmail())))
-                .andExpect((ResultMatcher) jsonPath("$.userPassword", is(mockAuth.getUserPassword())));
+                .andExpect((ResultMatcher) jsonPath("$.id", is(mockAuth.getId())))
+                .andExpect((ResultMatcher) jsonPath("$.email", is(mockAuth.getEmail())))
+                .andExpect((ResultMatcher) jsonPath("$.password", is(mockAuth.getPassword())));
     }
 
 }

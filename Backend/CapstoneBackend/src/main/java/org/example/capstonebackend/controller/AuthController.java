@@ -24,19 +24,15 @@ public class AuthController {
 //CREATE - we want to be able to prevent duplication of email address usage.
 
     //add auth
-    @PostMapping("/auths/userEmail/{userEmail}")
-    public ResponseEntity<Auth> addAuthByEmail(@RequestBody Auth auth) {
+    @PostMapping("/auths")
+    public ResponseEntity<Auth> addAuth(@RequestBody Auth auth) throws Exception {
         try {
-            if(auth.getUserEmail() == null || auth.getUserPassword() == null) {
-                return ResponseEntity.badRequest().build();
-            }
-            boolean added = authService.addAuthByEmail(auth);
-            if (added) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(auth);
-            } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            }
+            //trying to add auth
+            Auth addedAuth = authService.addAuth(auth);
+            //if successful, return OK(200) response with the added auth
+            return ResponseEntity.ok(addedAuth);
         } catch (Exception e) {
+            //if an exception occurs during adding the auth, return Bad Request (400) response
             return ResponseEntity.badRequest().build();
         }
     }
