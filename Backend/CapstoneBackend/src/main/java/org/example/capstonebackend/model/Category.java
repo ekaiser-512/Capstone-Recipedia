@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -13,20 +12,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Book {
-
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer bookId;
-    private String bookTitle;
+    private Integer id;
+    private String Title;
 
-    //Creating 1:N relationship between User and Book
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "book_id")
+    private Book book;
 
-    //Creating 1:N relationship between Book and Recipe
-    @OneToMany(mappedBy = "book")
-    private List<Category> categories;
+    @OneToMany(mappedBy = "category")
+    private List<Recipe> recipes;
 }
