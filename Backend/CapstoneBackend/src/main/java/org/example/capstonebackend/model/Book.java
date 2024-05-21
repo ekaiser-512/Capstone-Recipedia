@@ -20,6 +20,7 @@ public class Book {
     private Integer id;
     private String title;
 
+
     //Creating 1:N relationship between User and Book
     @JsonIgnore
     @ManyToOne
@@ -30,3 +31,4 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private List<Category> categories;
 }
+
