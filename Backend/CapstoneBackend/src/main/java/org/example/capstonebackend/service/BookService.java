@@ -27,12 +27,12 @@ public class BookService {
 
     //add book
     public Book addBook(Book book) throws Exception {
-        // Check if a post with the same title already exists
-       Optional <Object> bookExists = Optional.of(bookRepository.findById(book.getId()));
+        // Check if a book with the same title already exists
+       Optional <Book> bookExists = (Optional<Book>) bookRepository.findByTitle(book.getTitle());
 
-        // If a post with the same title exists, throw an exception
+        // If a book with the same title exists, throw an exception
         if(bookExists.isPresent()) {
-            throw new Exception("book with Id " + book.getId() + " already exists");
+            throw new Exception("book with Title " + book.getTitle() + " already exists");
         }
         // If no post with the same title exists, save the new post and return it
         return bookRepository.save(book);

@@ -92,4 +92,6 @@ public class BookController {
         bookService.deleteCategoryFromBook(id, categoryId);
     }
 
+    //todo delete recipe from book
+
 }

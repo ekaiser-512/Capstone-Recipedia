@@ -30,5 +30,8 @@ public class Book {
     //Creating 1:N relationship between Book and Recipe
     @OneToMany(mappedBy = "book")
     private List<Category> categories;
+
+    public void setRecipes(List<Recipe> list) {
+    }
 }
 

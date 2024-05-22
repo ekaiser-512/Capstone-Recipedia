@@ -17,6 +17,6 @@ public class Auth {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer authId;
-    private String userEmail;
-    private String userPassword;
+    private String email;
+    private String password;
 }

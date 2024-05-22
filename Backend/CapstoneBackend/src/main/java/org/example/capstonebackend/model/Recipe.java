@@ -19,12 +19,13 @@ public class Recipe {
     private Integer recipeId;
     private String recipeName;
     private String recipeAuthor;
+    private String recipeDescription;
 
-    //Creating 1:N relationship between Book and Recipe
+    //Creating 1:N relationship between Category and Recipe
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     //Creating M:N relationship between Recipe and Ingredient
     @ManyToMany(cascade = CascadeType.ALL)
