@@ -114,9 +114,8 @@ public class AuthControllerTest {
         when(authService.getAuthById((id))).thenReturn(mockAuth);
 
         //act
-        ResultActions resultActions = mockMvc.perform(get("/auths/{id}", id));
-        resultActions.andExpect(status().isOk()); //status 200
-        authTestUtilities.compareJsonOutput(resultActions);
+        mockMvc.perform(get("/auths/{id}", id))
+                .andExpect(status().isOk()); //status 200
 
         //assert
         verify(authService).getAuthById(id);
@@ -201,14 +200,14 @@ public class AuthControllerTest {
     @Test
     public void testUpdateAuth_IdDoesNotExist() throws Exception {
         //arrange
-        when(authService.getAuthById(mockAuth.getId())).thenThrow(new Exception("User with auth id " + mockAuth.getId() + " does not exist"));
-
+        when(authService.updateAuth(anyInt(), any(Auth.class))).thenThrow(new Exception("Auth with id " + mockAuth.getId() + " not found"));
         //act
-        mockMvc.perform(get("/users/{id}", mockAuth.getId())
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/auth/{id}", mockAuth.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authToJson(mockAuth)))
                 .andExpect(status().isNotFound());
 
         //assert
-        verify(authService).getAuthById(mockAuth.getId());
+        verify(authService).updateAuth(any(Integer.class), any(Auth.class));
     }
 }

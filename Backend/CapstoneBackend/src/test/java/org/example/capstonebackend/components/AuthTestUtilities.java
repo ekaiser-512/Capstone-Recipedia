@@ -8,13 +8,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.hamcrest.core.Is.is;
-
-
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
-
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 @Component
 public class AuthTestUtilities {
 
+    static Auth auth = new Auth();
     public static Auth mockAuth = createMockAuth();
 
     public static String email = "test@email.com";
@@ -38,11 +36,11 @@ public class AuthTestUtilities {
         }
     }
 
-    public void compareJsonOutput(ResultActions resultActions) throws Exception {
+    public void compareJsonOutput(ResultActions resultActions, Auth mockAuth) throws Exception {
         resultActions
-                .andExpect((ResultMatcher) jsonPath("$.id", is(mockAuth.getId())))
-                .andExpect((ResultMatcher) jsonPath("$.email", is(mockAuth.getEmail())))
-                .andExpect((ResultMatcher) jsonPath("$.password", is(mockAuth.getPassword())));
+                .andExpect(jsonPath("$.id", is(mockAuth.getId())))
+                .andExpect(jsonPath("$.email", is(mockAuth.getEmail())))
+                .andExpect(jsonPath("$.password", is(mockAuth.getPassword())));
     }
 
 }
