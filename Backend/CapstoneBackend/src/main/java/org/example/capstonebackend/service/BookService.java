@@ -28,7 +28,7 @@ public class BookService {
     //add book
     public Book addBook(Book book) throws Exception {
         // Check if a book with the same title already exists
-       Optional <Book> bookExists = (Optional<Book>) bookRepository.findByTitle(book.getTitle());
+      Optional<Book> bookExists = bookRepository.findByTitle(book.getTitle());
 
         // If a book with the same title exists, throw an exception
         if(bookExists.isPresent()) {

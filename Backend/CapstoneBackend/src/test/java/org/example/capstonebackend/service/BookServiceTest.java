@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import javax.swing.text.html.Option;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -70,5 +73,19 @@ public class BookServiceTest {
 
         assertEquals(mockBook, result);
         verify(bookRepository).save(mockBook);
+    }
+
+        //sad path
+    @Test
+    public void testAddBook_BooksExists() throws Exception {
+        when(bookRepository.existsById(any())).thenReturn(true);
+        when(bookRepository.save(any())).thenReturn(null);
+        when(bookRepository.findByTitle(any())).thenReturn(Optional.of(mockBook));
+
+        assertThrows(Exception.class, () -> {
+            bookService.addBook(mockBook);
+        });
+
+        verify(bookRepository,times(0)).save(mockBook);
     }
 }

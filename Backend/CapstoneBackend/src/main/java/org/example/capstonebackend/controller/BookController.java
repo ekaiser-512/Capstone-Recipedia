@@ -18,7 +18,7 @@ public class BookController {
 
 //CREATE
     //add book todo how do I make it so that it only allows one book to be added per user?
-    @PostMapping("/posts")
+    @PostMapping("/books")
     public ResponseEntity<Book> addBook (@RequestBody Book book) throws Exception {
         try {
             //Trying to add post
