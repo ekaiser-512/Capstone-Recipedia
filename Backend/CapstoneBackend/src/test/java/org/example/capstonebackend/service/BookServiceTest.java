@@ -4,6 +4,7 @@ import org.example.capstonebackend.model.Book;
 import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.model.Recipe;
 import org.example.capstonebackend.repository.IBookRepository;
+import org.example.capstonebackend.repository.ICategoryRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +14,7 @@ import javax.swing.text.html.Option;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -23,10 +23,14 @@ public class BookServiceTest {
     @MockBean
     IBookRepository bookRepository;
 
+    @MockBean
+    ICategoryRepository categoryRepository;
+
     @Autowired
     BookService bookService;
 
     private final Book mockBook = createMockBook();
+    private final Category mockCategory = createMockCategory();
     private static final Category addedCategory = mockCategory(1);
     private static final Category deletedCategory = mockCategory(2);
     private static final Recipe addedRecipe = mockRecipe(1);
@@ -42,6 +46,14 @@ public class BookServiceTest {
         book.setRecipes(Arrays.asList(deletedRecipe));
 
         return book;
+    }
+
+    private static Category createMockCategory() {
+        Category category = new Category();
+        category.setCategoryId(1);
+        category.setTitle("Test Category");
+
+        return category;
     }
 
     private static Category mockCategory(Integer categoryId) {
@@ -88,4 +100,23 @@ public class BookServiceTest {
 
         verify(bookRepository,times(0)).save(mockBook);
     }
+
+    //add category to book
+        //happy path
+    @Test
+    public void testAddCategoryToBook() throws Exception {
+        when(bookRepository.findById(any())).thenReturn(Optional.of(mockBook));
+        when(categoryRepository.findById(any())).thenReturn(Optional.of(mockCategory));
+
+        Book result = bookService.addCategoryToBook(mockBook.getId(), mockCategory.getCategoryId());
+
+        assertNotNull(result);
+        assertTrue(result.getCategories().contains(mockCategory));
+        verify(bookRepository).findById(mockBook.getId());
+        verify(categoryRepository).findById(mockCategory.getCategoryId());
+        verify(bookRepository).save(mockBook);
+        verify(categoryRepository).save(mockCategory);
+    }
+
 }
+
