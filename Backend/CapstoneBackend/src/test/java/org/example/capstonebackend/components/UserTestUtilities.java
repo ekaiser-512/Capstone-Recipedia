@@ -8,9 +8,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.hamcrest.core.Is.is;
-
-
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @Component
 public class UserTestUtilities {
@@ -33,30 +31,30 @@ public class UserTestUtilities {
 
     private static User createMockUser() {
         User user = new User();
-        user.setId(1);
+        user.setUserId(1);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setDatOfBirth(dateOfBirth);
+        user.setDateOfBirth(dateOfBirth);
         user.setEmail(email);
         user.setPassword(password);
         return user;
     }
     public static String userToJson(User mockUser) {
         try {
-            return objectMapper.writeValueAsString(user);
+            return objectMapper.writeValueAsString(mockUser);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void compareJsonOutput(ResultActions resultActions) throws Exception {
+    public static void compareJsonOutput(ResultActions resultActions, User mockUser) throws Exception {
         resultActions
-                .andExpect((ResultMatcher) jsonPath("$.id", is(mockUser.getId())))
-                .andExpect((ResultMatcher) jsonPath("$.firstName", is(mockUser.getFirstName())))
-                .andExpect((ResultMatcher) jsonPath("$.lastName", is(mockUser.getLastName())))
-                .andExpect((ResultMatcher) jsonPath("$.dateOfBirth", is(mockUser.getDatOfBirth())))
-                .andExpect((ResultMatcher) jsonPath("$.email", is(mockUser.getEmail())))
-                .andExpect((ResultMatcher) jsonPath("$.password", is(mockUser.getPassword())));
+                .andExpect(jsonPath("$.userId", is(mockUser.getUserId())))
+                .andExpect(jsonPath("$.firstName", is(mockUser.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(mockUser.getLastName())))
+                .andExpect(jsonPath("$.dateOfBirth", is(mockUser.getDateOfBirth())))
+                .andExpect(jsonPath("$.email", is(mockUser.getEmail())))
+                .andExpect(jsonPath("$.password", is(mockUser.getPassword())));
     }
 
 }

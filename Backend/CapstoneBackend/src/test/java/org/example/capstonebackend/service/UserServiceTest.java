@@ -67,7 +67,7 @@ public class UserServiceTest {
     public void testGetUserById() throws Exception {
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(mockUser));
 
-        User result = userService.getUserById(mockUser.getId());
+        User result = userService.getUserById(mockUser.getUserId());
 
         assertEquals(mockUser, result);
         verify(userRepository).findById(anyInt());
@@ -76,13 +76,13 @@ public class UserServiceTest {
         //sad path
     @Test
     public void testGetUserById_UserNotFound() throws Exception {
-        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.empty());
+        when(userRepository.findById(mockUser.getUserId())).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
-            userService.getUserById(mockUser.getId());
+            userService.getUserById(mockUser.getUserId());
         });
 
-        verify(userRepository).findById(mockUser.getId());
+        verify(userRepository).findById(mockUser.getUserId());
     }
 
     //get user by email
@@ -146,13 +146,13 @@ public class UserServiceTest {
         //sad path
     @Test
     public void testUpdateUser_UserNotFound() throws Exception {
-        when(userRepository.findById(mockUser.getId())).thenReturn(Optional.empty());
+        when(userRepository.findById(mockUser.getUserId())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(Exception.class, () -> {
-            userService.getUserById(mockUser.getId());
+            userService.getUserById(mockUser.getUserId());
         });
 
-        assertEquals("User with id " + mockUser.getId() + " not found", exception.getMessage());
+        assertEquals("User with id " + mockUser.getUserId() + " not found", exception.getMessage());
     }
 
 //DELETE
@@ -162,8 +162,8 @@ public class UserServiceTest {
     public void testDeleteUser() {
         doNothing().when(userRepository).deleteById(anyInt());
 
-        userService.deleteUser(mockUser.getId());
+        userService.deleteUser(mockUser.getUserId());
 
-        verify(userRepository).deleteById(mockUser.getId());
+        verify(userRepository).deleteById(mockUser.getUserId());
     }
 }
