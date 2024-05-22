@@ -89,31 +89,5 @@ public class AuthServiceTest {
         verify(authRepository).findById(mockAuth.getId());
     }
 
-    //get all auths
-        //happy path
-    @Test
-    public void testGetAllAuths() {
-        List<Auth> mockAuths = new ArrayList<>();
-        mockAuths.add(new Auth());
-        mockAuths.add(new Auth());
-        mockAuths.add(new Auth());
 
-        when(authRepository.findAll()).thenReturn(mockAuths);
-
-        List<Auth> allAuths = authService.getAllAuths();
-
-        assertEquals(3, allAuths.size());
-        verify(authRepository).findAll();
-    }
-
-//DELETE
-    //delete auth
-    @Test
-    public void testDeleteAuth() {
-        doNothing().when(authRepository).deleteById(anyInt());
-
-        authService.deleteAuth(mockAuth.getId());
-
-        verify(authRepository).deleteById(mockAuth.getId());
-    }
 }

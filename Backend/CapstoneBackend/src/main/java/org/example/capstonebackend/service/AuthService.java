@@ -27,7 +27,7 @@ public class AuthService {
         Optional<Object> authExists = authRepository.findByEmail(auth.getEmail());
 
         //If an auth with the same email exists, throw an exception
-        if(authExists.isPresent()) {
+        if (authExists.isPresent()) {
             throw new Exception("auth with email " + auth.getEmail() + " already exists");
         }
         //if no auth with the same email exists save the new auth and return it
@@ -39,15 +39,10 @@ public class AuthService {
     //get auth by ID
     public Auth getAuthById(Integer id) throws Exception {
         return authRepository.findById(id)
-                .orElseThrow(() -> new Exception ("User with auth " + id + " not found."));
+                .orElseThrow(() -> new Exception("User with auth " + id + " not found."));
     }
 
-    //get all auths
-    public List<Auth> getAllAuths() {
-        return authRepository.findAll();
-    }
-
-    //get auth by email
+    //get auth by email -- this is also used by @Post "/users/login" to access database.
     public Auth getAuthByEmail(String email) throws Exception {
         return (Auth) authRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User with email " + email + " not found"));
@@ -60,18 +55,12 @@ public class AuthService {
         Auth oldAuth = authRepository.findById(id).orElse(null);
 
         if (oldAuth == null) {
-            throw new Exception ("User with authId " + id + " not found");
+            throw new Exception("User with authId " + id + " not found");
         }
         oldAuth.setEmail(auth.getEmail());
         oldAuth.setPassword(auth.getPassword());
 
         return authRepository.save(oldAuth);
-    }
-
-//DELETE
-    //delete Auth
-    public void deleteAuth(int id) {
-        authRepository.deleteById(id);
     }
 
 }

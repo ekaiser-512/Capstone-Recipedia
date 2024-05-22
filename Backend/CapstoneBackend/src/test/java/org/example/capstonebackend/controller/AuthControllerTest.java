@@ -58,7 +58,7 @@ public class AuthControllerTest {
     //CREATE
 
     //add Auth
-        //happy path
+    //happy path
     @Test
     void testUserSignup() throws Exception {
         //arrange
@@ -73,7 +73,7 @@ public class AuthControllerTest {
         verify(authService).userSignup(any(Auth.class));
     }
 
-        //sad path
+    //sad path
     @Test
     void testAddAuth_UserExists() throws Exception {
         //arrange
@@ -81,14 +81,28 @@ public class AuthControllerTest {
 
         //act
         mockMvc.perform(post("/auths")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(authToJson(mockAuth)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authToJson(mockAuth)))
                 .andExpect(status().isBadRequest());
 
         //assert
         verify(authService).userSignup(any());
 
     }
+
+    @Test
+    void testUserLogin() throws Exception {
+        when(authService.getAuthByEmail(mockAuth.getEmail())).thenReturn(mockAuth);
+
+        mockMvc.perform(post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(authToJson(mockAuth)))
+            .andExpect(status().isOk());
+
+        verify(authService).getAuthByEmail(anyString());
+    }
+
+
 
 //READ
     //get auth by ID
@@ -109,7 +123,7 @@ public class AuthControllerTest {
 
     }
 
-        //sad path
+    //sad path
     @Test
     public void testGetAuthById_IdNotFound() throws Exception {
         //arrange
@@ -117,54 +131,15 @@ public class AuthControllerTest {
 
         //act
         mockMvc.perform(get("/auths/{id}", mockAuth.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         //assert
         verify(authService).getAuthById(mockAuth.getId());
     }
 
-    //getAllAuths
-        //happy path
-    @Test
-    public void testGetAllAuths() throws Exception {
-        //arrange
-        List<Auth> mockAuths = Arrays.asList(mockAuth, mockAuth);
-        when(authService.getAllAuths()).thenReturn(mockAuths);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String mockAuthsJson = objectMapper.writeValueAsString(mockAuths);
-
-        //act
-        mockMvc.perform(get("/auths")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mockAuthsJson))
-                .andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$.length()").value(mockAuths.size()));
-
-        //assert
-        verify(authService).getAllAuths();
-    }
-
-        //sad path - no users found
-    @Test
-    public void testGetAllAuths_NoAuthsFound() throws Exception{
-        //arrange
-        List <Auth> auths = Arrays.asList();
-        when(authService.getAllAuths()).thenReturn(auths);
-
-        //act
-        mockMvc.perform(get("/auths", auths)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(auths.size()));
-
-        //assert
-        verify(authService).getAllAuths();
-    }
-
     //get auth by email
-        //happy path
+    //happy path
     @Test
     public void testGetAuthByEmail() throws Exception {
         //arrange
@@ -174,14 +149,14 @@ public class AuthControllerTest {
         ResultActions resultActions = mockMvc.perform(get("/auths/email/{email}", email)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(authToJson(mockAuth)));
-            resultActions.andExpect(status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email", Is.is(email)));
 
         //assert
         verify(authService).getAuthByEmail(email);
     }
 
-        //sad path
+    //sad path
     @Test
     public void testGetAuthByEmail_EmailNotFound() throws Exception {
         //arrange
@@ -191,15 +166,15 @@ public class AuthControllerTest {
         //act
         ResultActions resultActions = mockMvc.perform(get("/auths/email/{email}", badEmail)
                 .contentType(MediaType.APPLICATION_JSON));
-            resultActions.andExpect(status().isNotFound());
+        resultActions.andExpect(status().isNotFound());
 
         //assert
         verify(authService).getAuthByEmail(badEmail);
     }
 
-//UPDATE
+    //UPDATE
     //update auth
-        //happy path
+    //happy path
     @Test
     public void testUpdateAuth() throws Exception {
         //arrange
@@ -214,7 +189,7 @@ public class AuthControllerTest {
         ResultActions resultActions = mockMvc.perform(put("/auths/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(authToJson(mockAuth)));
-            resultActions.andExpect(status().isOk())
+        resultActions.andExpect(status().isOk())
                 .andExpect((ResultMatcher) jsonPath("$.email", is("Joey_Doe")))
                 .andExpect((ResultMatcher) jsonPath("$.password", is("joey.doeghy")));
 
@@ -222,7 +197,7 @@ public class AuthControllerTest {
         verify(authService).updateAuth(eq(id), any(Auth.class));
     }
 
-        //sad path
+    //sad path
     @Test
     public void testUpdateAuth_IdDoesNotExist() throws Exception {
         //arrange
@@ -230,24 +205,10 @@ public class AuthControllerTest {
 
         //act
         mockMvc.perform(get("/users/{id}", mockAuth.getId())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
         //assert
         verify(authService).getAuthById(mockAuth.getId());
-    }
-
-//DELETE
-    //delete auth
-    @Test
-    public void testDeleteAuth() throws Exception {
-        int id = 1;
-        doNothing().when(authService).deleteAuth(anyInt());
-
-        ResultActions resultActions = mockMvc.perform(delete("/auths/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON));
-            resultActions.andExpect(status().isOk());
-
-        verify(authService).deleteAuth(id);
     }
 }
