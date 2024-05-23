@@ -36,28 +36,6 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
-    //add ingredient to recipe
-    public Recipe  addIngredientToRecipe(Integer recipeId, Integer ingredientId) throws Exception {
-        // Retrieve the recipe by its ID or throw an exception if not found
-        Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() -> new Exception ("Recipe with id " + recipeId + " not found"));
-        // Retrieve the ingredient by its ID or throw an exception if not found
-        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(() -> new Exception ("Ingredient with id " + ingredientId + " not found"));
-
-        // Add the ingredient to the recipe's list of ingredients
-        recipe.getIngredients().add(ingredient);
-        // Add the recipe to the ingredient's list of recipes
-        ingredient.getRecipes().add(recipe);
-
-        // Add the ingredient to the recipe
-        recipe.getIngredients().add(ingredient);
-        // Save the ingredient with updated list of recipes
-        ingredientRepository.save(ingredient);
-        //Save the recipe with ingredients
-        recipeRepository.save(recipe);
-
-        return recipe;
-    }
-
 //READ
     //get recipe by name
     public Recipe getRecipeByName(String recipeName) throws Exception {

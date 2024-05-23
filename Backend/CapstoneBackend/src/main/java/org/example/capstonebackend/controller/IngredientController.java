@@ -62,7 +62,7 @@ public class IngredientController {
         return ingredientService.getIngredientsThatAreCommonAllergens(commonAllergen);
     }
 
-    //get ingredients in recipe
+    //todo get ingredients in recipe
     @GetMapping("/{recipeId}/ingredients")
     public List<Ingredient> getIngredientsInRecipe(@PathVariable Recipe recipe) {
         return ingredientService.getIngredientsInRecipe(recipe);

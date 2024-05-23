@@ -80,40 +80,6 @@ public class RecipeControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    //add ingredient to recipe
-        //happy path
-    @Test
-    public void testAddIngredientToRecipe() throws Exception {
-        // Mock the recipeService to return the updated recipe
-        when(recipeService.addIngredientToRecipe(anyInt(), anyInt())).thenReturn(mockRecipe);
-
-        // Perform the POST request and check the response
-        mockMvc.perform(post("/recipes/{recipeId}/ingredients/{ingredientId}", 1, 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.recipeId").value(mockRecipe.getRecipeId()))
-                .andExpect(jsonPath("$.recipeName").value(mockRecipe.getName()));
-        // Add other necessary JSON path checks for the recipe fields
-
-        // Verify that the service method was called with the correct parameters
-        verify(recipeService).addIngredientToRecipe(1, 1);
-    }
-        //sad path
-    @Test
-    public void testAddIngredientToRecipe_RecipeOrIngredientNotFound() throws Exception {
-        // Mock the recipeService to throw an exception
-        when(recipeService.addIngredientToRecipe(anyInt(), anyInt())).thenThrow(new Exception("Recipe or ingredient not found"));
-
-        // Perform the POST request and check the response
-        mockMvc.perform(post("/recipes/{recipeId}/ingredients/{ingredientId}", 1, 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-
-        // Verify that the service method was called with the correct parameters
-        verify(recipeService).addIngredientToRecipe(1, 1);
-    }
-
-
 //READ
     //get recipe by name
         //happy path
@@ -122,11 +88,11 @@ public class RecipeControllerTest {
 
         when(recipeService.getRecipeByName(anyString())).thenReturn(mockRecipe);
 
-        mockMvc.perform(get("/recipes/recipeName/{recipeName}", mockRecipe.getName())
+        mockMvc.perform(get("/recipes/name/{name}", mockRecipe.getName())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.recipeId").value(1))
-                .andExpect(jsonPath("$.recipeName").value(mockRecipe.getName()));
+                .andExpect(jsonPath("$.name").value(mockRecipe.getName()));
     }
         //sad path
     @Test
@@ -140,32 +106,6 @@ public class RecipeControllerTest {
 
         verify(recipeService).getRecipeByName(badName);
     }
-
-    //get recipes by author
-        //happy path
-//    @Test
-//    public void testGetRecipeByAuthor() throws Exception {
-//
-//        when(recipeService.getRecipeByAuthor(anyString())).thenReturn(mockRecipe);
-//
-//        mockMvc.perform(get("/recipes/recipeAuthor/{recipeAuthor}", mockRecipe.getRecipeAuthor())
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.recipeId").value(1))
-//                .andExpect(jsonPath("$.recipeAuthor").value(mockRecipe.getRecipeAuthor()));
-//    }
-//        //sad path
-//    @Test
-//    public void testGetRecipeByAuthor_AuthorNotFound() throws Exception {
-//        String badAuthor = "Harry Potter";
-//        when(recipeService.getRecipeByAuthor(badAuthor)).thenThrow(new Exception("Recipe with author " + badAuthor + " does not exist"));
-//
-//        ResultActions resultActions = mockMvc.perform(get("/recipes/recipeAuthor/{recipeAuthor}", badAuthor)
-//                .contentType(MediaType.APPLICATION_JSON));
-//        resultActions.andExpect(status().isNotFound());
-//
-//        verify(recipeService).getRecipeByAuthor(badAuthor);
-//    }
 
     //todo get recipes in category
         //todo happy path

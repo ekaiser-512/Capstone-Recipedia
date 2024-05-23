@@ -37,26 +37,12 @@ public class RecipeController {
         }
     }
 
-    //add ingredient to recipe
-    @PostMapping("recipes/{recipeId}/ingredients/{ingredientId}")
-    public ResponseEntity<Recipe> addIngredientToRecipe(@PathVariable Integer recipeId, @PathVariable Integer ingredientId) throws Exception {
-        try {
-            // Attempt to add the ingredient to the recipe
-            Recipe recipe = recipeService.addIngredientToRecipe(recipeId, ingredientId);
-            // If successful, return OK (200) response with the updated recipe
-            return ResponseEntity.ok().body(recipe);
-        } catch (Exception e) {
-            // If an exception occurs (e.g., recipe or ingredient not found), return Not Found (404) response
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
 //READ
     //get recipe by name
-    @GetMapping("/recipes/recipeName/{recipeName}")
-    public ResponseEntity<Recipe> getRecipeByName(@PathVariable String recipeName) {
+    @GetMapping("/recipes/name/{name}")
+    public ResponseEntity<Recipe> getRecipeByName(@PathVariable String name) {
         try {
-            Recipe recipe = recipeService.getRecipeByName(recipeName);
+            Recipe recipe = recipeService.getRecipeByName(name);
             return ResponseEntity.ok(recipe);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

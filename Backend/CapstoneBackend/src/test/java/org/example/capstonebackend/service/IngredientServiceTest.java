@@ -3,7 +3,6 @@ package org.example.capstonebackend.service;
 import jakarta.inject.Inject;
 import org.example.capstonebackend.components.IngredientTestUtilities;
 import org.example.capstonebackend.model.Ingredient;
-import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IIngredientRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,8 @@ import java.util.Optional;
 
 import static org.example.capstonebackend.components.IngredientTestUtilities.createMockIngredient;
 import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
-import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -29,8 +26,6 @@ public class IngredientServiceTest {
 
     @Autowired
     private IngredientService ingredientService;
-    @Inject
-    private IngredientTestUtilities ingredientTestUtilities;
 
 //CREATE
     //add ingredient
