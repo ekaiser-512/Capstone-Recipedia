@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -16,7 +15,11 @@ import lombok.NoArgsConstructor;
 public class Auth {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer authId;
+    private Integer id;
     private String email;
     private String password;
+
+//    public String getEmail() {
+//        return null;
+//    }
 }
