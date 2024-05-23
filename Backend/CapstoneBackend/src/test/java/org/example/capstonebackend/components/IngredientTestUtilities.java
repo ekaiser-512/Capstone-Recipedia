@@ -37,7 +37,7 @@ public class IngredientTestUtilities {
         }
     }
 
-    public static void compareJsonOutput(ResultActions resultActions, Ingredient mockIngredient) throws Exception {
+    public static void compareJsonOutputIngredient(ResultActions resultActions, Ingredient mockIngredient) throws Exception {
         resultActions
                 .andExpect(jsonPath("$.ingredientId", is(mockIngredient.getIngredientId())))
                 .andExpect(jsonPath("$.ingredientName", is(mockIngredient.getIngredientName())))
