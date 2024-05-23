@@ -33,7 +33,7 @@ public class IngredientController {
 
 //READ
     //get ingredient by name
-    @GetMapping("/ingredients/ingredientName/{ingredientName")
+    @GetMapping("/ingredients/ingredientName/{ingredientName}")
     public ResponseEntity<Ingredient> getIngredientByName(@PathVariable String ingredientName) {
         try {
             Ingredient ingredient = ingredientService.getIngredientByName(ingredientName);
@@ -63,10 +63,10 @@ public class IngredientController {
 //UPDATE
     //update ingredient
     @PutMapping("/ingredients/{ingredientId}")
-    public ResponseEntity<?> updatedIngredient(@PathVariable int ingredientId, @RequestBody Ingredient ingredient) throws Exception {
+    public ResponseEntity<?> updateIngredient(@PathVariable int ingredientId, @RequestBody Ingredient ingredient) throws Exception {
         try {
-            Ingredient updatedIngredient = ingredientService.updateIngredient(ingredientId, ingredient);
-            return ResponseEntity.ok(updatedIngredient);
+            Ingredient updateIngredient = ingredientService.updateIngredient(ingredientId, ingredient);
+            return ResponseEntity.ok(updateIngredient);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }

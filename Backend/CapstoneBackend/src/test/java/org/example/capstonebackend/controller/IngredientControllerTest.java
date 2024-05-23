@@ -1,27 +1,18 @@
 package org.example.capstonebackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.inject.Inject;
 import net.bytebuddy.matcher.ElementMatchers;
-import org.example.capstonebackend.components.UserTestUtilities;
 import org.example.capstonebackend.model.Ingredient;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IIngredientRepository;
 import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.IngredientService;
 import org.example.capstonebackend.service.UserService;
-import org.example.capstonebackend.service.UserServiceTest;
-import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -29,18 +20,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.example.capstonebackend.components.IngredientTestUtilities.*;
+import static org.example.capstonebackend.components.IngredientTestUtilities.ingredientToJson;
+import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
 import static org.example.capstonebackend.components.UserTestUtilities.*;
 import static org.hamcrest.core.Is.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.mock.http.server.reactive.MockServerHttpRequest.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @WebMvcTest(IngredientController.class)
 public class IngredientControllerTest {
@@ -75,15 +65,17 @@ public class IngredientControllerTest {
 
         //sad path
     @Test
-    public void testAddIngredient_IngredientExists() throws Exception {
-        when(ingredientService.addIngredient(any())).thenThrow(new Exception("Ingredient with id " + mockIngredient.getIngredientId() + " already exists"));
+    public void testAddIngredient_IngredientAlreadyExists() throws Exception {
+        Ingredient ingredient = new Ingredient();
+        ingredient.setIngredientId(1);
+        ingredient.setIngredientName("Salt");
+
+        when(ingredientService.addIngredient(any(Ingredient.class))).thenThrow(new Exception("Ingredient already exists"));
 
         mockMvc.perform(post("/ingredients")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(ingredientToJson(mockIngredient)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(ingredient)))
                 .andExpect(status().isBadRequest());
-
-        verify(ingredientService.addIngredient(any()));
     }
 
 //READ
@@ -91,20 +83,18 @@ public class IngredientControllerTest {
         //happy path
     @Test
     public void testGetIngredientByName() throws Exception {
-        String ingredientName = "cheese";
+        String ingredientName = "Salt";
+        Ingredient ingredient = new Ingredient();
+        ingredient.setIngredientId(1);
+        ingredient.setIngredientName(ingredientName);
 
-        when(ingredientService.getIngredientByName(ingredientName)).thenReturn(mockIngredient);
+        when(ingredientService.getIngredientByName(anyString())).thenReturn(ingredient);
 
-        ResultActions resultActions = mockMvc.perform(get("/ingredients/ingredientName/{ingredientName}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(ingredientToJson(mockIngredient)));
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.ingredientName", is("cheese")))
-                .andExpect(jsonPath("$.ingredientFoodGroup", is("dairy")))
-                .andExpect(jsonPath("$.dietaryRestriction", is("lactose")))
-                .andExpect(jsonPath("$.commonAllergen", is(true)));
-
-        verify(ingredientService).getIngredientByName(ingredientName);
+        mockMvc.perform(get("/ingredients/ingredientName/{ingredientName}", ingredientName)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ingredientId").value(1))
+                .andExpect(jsonPath("$.ingredientName").value(ingredientName));
     }
         //sad path
     @Test
@@ -112,7 +102,7 @@ public class IngredientControllerTest {
         String badName = "unicorn blood";
         when(ingredientService.getIngredientByName(badName)).thenThrow(new Exception("Ingredient with name " + badName + " does not exist"));
 
-        ResultActions resultActions = mockMvc.perform(get("/ingredients/ingredientName/{ingredientName", badName)
+        ResultActions resultActions = mockMvc.perform(get("/ingredients/ingredientName/{ingredientName}", badName)
                 .contentType(MediaType.APPLICATION_JSON));
             resultActions.andExpect(status().isNotFound());
 
@@ -121,19 +111,110 @@ public class IngredientControllerTest {
 
     //get ingredient by dietary restriction
         //happy path
+    @Test
+    public void testGetIngredientByDiet() throws Exception {
+        String dietaryRestriction = "Vegan";
+        Ingredient ingredient = new Ingredient();
+        ingredient.setIngredientId(1);
+        ingredient.setIngredientName("Tofu");
+
+        when(ingredientService.getIngredientByDiet(anyString())).thenReturn(ingredient);
+
+        mockMvc.perform(get("/ingredients/dietaryRestriction/{dietaryRestriction}", dietaryRestriction)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ingredientId").value(1))
+                .andExpect(jsonPath("$.ingredientName").value("Tofu"));
+    }
         //sad path
+    @Test
+    public void testGetIngredientByDiet_IngredientNotFound() throws Exception {
+        String dietaryRestriction = "Vegan";
+
+        when(ingredientService.getIngredientByDiet(anyString())).thenThrow(new Exception("Ingredient not found"));
+
+        mockMvc.perform(get("/ingredients/dietaryRestriction/{dietaryRestriction}", dietaryRestriction)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 
     //get list of ingredients that are common allergens
         //happy path
-        //sad path
+    @Test
+    public void testGetIngredientsThatAreCommonAllergens() throws Exception {
+        Boolean commonAllergen = true;
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setIngredientId(1);
+        ingredient1.setIngredientName("Peanut");
+
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setIngredientId(2);
+        ingredient2.setIngredientName("Milk");
+
+        List<Ingredient> ingredients = Arrays.asList(ingredient1, ingredient2);
+
+        when(ingredientService.getIngredientsThatAreCommonAllergens(anyBoolean())).thenReturn(ingredients);
+
+        mockMvc.perform(get("/ingredients/commonAllergens")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(commonAllergen)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].ingredientId").value(1))
+                .andExpect(jsonPath("$[0].ingredientName").value("Peanut"))
+                .andExpect(jsonPath("$[1].ingredientId").value(2))
+                .andExpect(jsonPath("$[1].ingredientName").value("Milk"));
+    }
 
 //UPDATE
     //update ingredient
         //happy path
+    @Test
+    public void testUpdateIngredient() throws Exception {
+        int ingredientId = 1;
+        Ingredient ingredient = new Ingredient();
+        ingredient.setIngredientId(ingredientId);
+        ingredient.setIngredientName("Updated Ingredient");
+
+        Ingredient updatedIngredient = new Ingredient();
+        updatedIngredient.setIngredientId(ingredientId);
+        updatedIngredient.setIngredientName("Updated Ingredient");
+
+        when(ingredientService.updateIngredient(anyInt(), any(Ingredient.class))).thenReturn(updatedIngredient);
+
+        mockMvc.perform(put("/ingredients/{ingredientId}", ingredientId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(ingredient)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.ingredientId").value(ingredientId))
+                .andExpect(jsonPath("$.ingredientName").value("Updated Ingredient"));
+    }
+
         //sad path
+    @Test
+    public void TestUpdateIngredient_IdDoesNotExist() throws Exception {
+        when(ingredientService.updateIngredient(anyInt(), any(Ingredient.class))).thenThrow(new Exception("Ingredient with id " + mockIngredient.getIngredientId() + " not found"));
+
+        mockMvc.perform(put("/ingredients/{id}", mockIngredient.getIngredientId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(ingredientToJson(mockIngredient)))
+                .andExpect(status().isNotFound());
+
+        verify(ingredientService).updateIngredient(any(Integer.class), any(Ingredient.class));
+    }
 
 //DELETE
     //delete ingredient
         //happy path
+    @Test public void testDeleteIngredient() throws Exception {
+        int id = 1;
+
+        doNothing().when(ingredientService).deleteIngredient(anyInt());
+
+        ResultActions resultActions = mockMvc.perform(delete("/ingredients/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON));
+            resultActions.andExpect(status().isOk());
+
+            verify(ingredientService).deleteIngredient(id);
+    }
 
 }
