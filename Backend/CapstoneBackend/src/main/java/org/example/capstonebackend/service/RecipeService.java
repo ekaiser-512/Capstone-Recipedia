@@ -65,12 +65,12 @@ public class RecipeService {
     }
 
     //todo get recipe by author
-    public Recipe getRecipeByAuthor(String recipeAuthor) throws Exception {
-        return recipeRepository.findByAuthor(recipeAuthor)
-                .orElseThrow(() -> new Exception("Recipe with author " + recipeAuthor + " not found"));
-    }
+//    public Recipe getRecipeByAuthor(String recipeAuthor) throws Exception {
+//        return recipeRepository.findByAuthor(recipeAuthor)
+//                .orElseThrow(() -> new Exception("Recipe with author " + recipeAuthor + " not found"));
+//    }
 
-    //todo get all recipes in category
+    //todo get all ingredients in recipe
 
 
     //get all recipes

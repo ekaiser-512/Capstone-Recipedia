@@ -1,13 +1,10 @@
 package org.example.capstonebackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.example.capstonebackend.model.Ingredient;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IIngredientRepository;
-import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.IngredientService;
-import org.example.capstonebackend.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,16 +12,15 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.example.capstonebackend.components.IngredientTestUtilities.ingredientToJson;
 import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
-import static org.example.capstonebackend.components.UserTestUtilities.*;
-import static org.hamcrest.core.Is.is;
+
+import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -163,6 +159,26 @@ public class IngredientControllerTest {
                 .andExpect(jsonPath("$[0].ingredientName").value("Peanut"))
                 .andExpect(jsonPath("$[1].ingredientId").value(2))
                 .andExpect(jsonPath("$[1].ingredientName").value("Milk"));
+    }
+
+    //get all ingredients
+        //happy path
+    @Test
+    public void testGetAllIngredients() throws Exception {
+        List<Ingredient> mockIngredients = Arrays.asList(mockIngredient, mockIngredient);
+
+        when(ingredientService.getAllIngredients()).thenReturn(mockIngredients);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String mockIngredientsJson = objectMapper.writeValueAsString(mockIngredients);
+
+        mockMvc.perform(get("/ingredients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mockIngredientsJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(mockIngredients.size()));
+
+        verify(ingredientService).getAllIngredients();
     }
 
 //UPDATE
