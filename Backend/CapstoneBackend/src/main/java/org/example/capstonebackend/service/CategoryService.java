@@ -37,7 +37,9 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    //add recipe to category
+    //add category to book
+
+    //add recipe to category todo move to recipe entity
     public Category  addRecipeToCategory(Integer categoryId, Integer recipeId) throws Exception {
         // Retrieve the category by ID or throw an exception if not found
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new Exception ("Category with id " + categoryId + " not found"));
@@ -69,6 +71,7 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+
 //UPDATE
     //Update Category
     public Category updateCategory(int id, Category category) throws Exception {
@@ -87,4 +90,6 @@ public class CategoryService {
     public void deleteCategory(int id) {
         categoryRepository.deleteById(id);
     }
+
+
 }

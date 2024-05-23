@@ -1,10 +1,8 @@
 package org.example.capstonebackend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.inject.Inject;
+
 import org.example.capstonebackend.components.AuthTestUtilities;
 import org.example.capstonebackend.model.Auth;
-import org.example.capstonebackend.repository.IAuthRepository;
 import org.example.capstonebackend.service.AuthService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
@@ -27,16 +25,17 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.Arrays;
 import java.util.List;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.example.capstonebackend.components.AuthTestUtilities.*;
 import static org.example.capstonebackend.components.AuthTestUtilities.authToJson;
-import static org.example.capstonebackend.components.AuthTestUtilities.email;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.core.Is.is;
+
 
 @Import({AuthController.class, AuthTestUtilities.class})
 @WebMvcTest(AuthController.class)
@@ -65,11 +64,12 @@ public class AuthControllerTest {
         when(authService.userSignup(any(Auth.class))).thenReturn(mockAuth);
 
         //act
-        ResponseEntity<Auth> response = authController.userSignup(mockAuth);
+        ResultActions resultActions = mockMvc.perform(post("/users/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(AuthTestUtilities.authToJson(mockAuth)));
+        resultActions.andExpect(status().isOk());
 
         //assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(mockAuth, response.getBody());
         verify(authService).userSignup(any(Auth.class));
     }
 
@@ -80,7 +80,7 @@ public class AuthControllerTest {
         when(authService.userSignup(any())).thenThrow(new Exception("user with email " + mockAuth.getEmail() + " already exists"));
 
         //act
-        mockMvc.perform(post("/auths")
+        mockMvc.perform(post("/users/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authToJson(mockAuth)))
                 .andExpect(status().isBadRequest());
@@ -141,6 +141,8 @@ public class AuthControllerTest {
     //happy path
     @Test
     public void testGetAuthByEmail() throws Exception {
+        String email = "test@email.com";
+
         //arrange
         when(authService.getAuthByEmail(email)).thenReturn(mockAuth);
 
@@ -180,7 +182,7 @@ public class AuthControllerTest {
         int id = 1;
         Auth updatedAuth = new Auth();
         updatedAuth.setEmail("Joey_Doe");
-        updatedAuth.setPassword("joey.doeghy");
+        updatedAuth.setPassword("joey.doughy");
 
         when(authService.updateAuth(eq(id), any(Auth.class))).thenReturn(updatedAuth);
 
@@ -189,8 +191,8 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(authToJson(mockAuth)));
         resultActions.andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$.email", is("Joey_Doe")))
-                .andExpect((ResultMatcher) jsonPath("$.password", is("joey.doeghy")));
+                .andExpect(jsonPath("$.email", is("Joey_Doe")))
+                .andExpect(jsonPath("$.password", is("joey.doughy")));
 
         //assert
         verify(authService).updateAuth(eq(id), any(Auth.class));
@@ -202,7 +204,7 @@ public class AuthControllerTest {
         //arrange
         when(authService.updateAuth(anyInt(), any(Auth.class))).thenThrow(new Exception("Auth with id " + mockAuth.getId() + " not found"));
         //act
-        mockMvc.perform(put("/auth/{id}", mockAuth.getId())
+        mockMvc.perform(put("/auths/{id}", mockAuth.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(authToJson(mockAuth)))
                 .andExpect(status().isNotFound());

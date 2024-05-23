@@ -100,16 +100,13 @@ public class RecipeControllerTest {
         String badName = "unicorn steak";
         when(recipeService.getRecipeByName(badName)).thenThrow(new Exception("Recipe with name " + badName + " does not exist"));
 
-        ResultActions resultActions = mockMvc.perform(get("/recipes/recipeName/{recipeName}", badName)
+        ResultActions resultActions = mockMvc.perform(get("/recipes/name/{name}", badName)
                 .contentType(MediaType.APPLICATION_JSON));
         resultActions.andExpect(status().isNotFound());
 
         verify(recipeService).getRecipeByName(badName);
     }
 
-    //todo get recipes in category
-        //todo happy path
-        //todo sad path
 
     //get all recipes
         //happy path
@@ -145,7 +142,7 @@ public void testUpdateRecipe() throws Exception {
 
     Recipe updatedRecipe = new Recipe();
     updatedRecipe.setRecipeId(recipeId);
-    updatedRecipe.setName("Updated Ingredient");
+    updatedRecipe.setName("Updated Recipe");
     updatedRecipe.setRecipeAuthor("UpdatedAuthor");
 
     when(recipeService.updateRecipe(anyInt(), any(Recipe.class))).thenReturn(updatedRecipe);

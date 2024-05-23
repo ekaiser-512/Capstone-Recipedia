@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/users/login")
-    public ResponseEntity<?> userLogin(@RequestBody Auth auth) throws Exception {
+    public ResponseEntity<?> userLogin(@RequestBody Auth auth) {
         try {
             Auth existingAuth = authService.getAuthByEmail(auth.getEmail());
             if (Objects.equals(existingAuth.getPassword(), auth.getPassword()) &&

@@ -23,7 +23,7 @@ public class BookService {
         this.categoryRepository = categoryRepository;
     }
 
-//CREATE (todo could this be updated to find by userId "book by user Id already exists")
+//CREATE
 
     //add book
     public Book addBook(Book book) throws Exception {
@@ -38,7 +38,7 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    //add category to book
+    //add category to book todo move to category entity
     public Book addCategoryToBook(Integer id, Integer categoryId) throws Exception {
         Book book = bookRepository.findById(id).orElseThrow(() -> new Exception("Book with id " + id + " not found"));
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new Exception("Category with id " + categoryId  + " not found"));
@@ -64,8 +64,6 @@ public class BookService {
         return book.getCategories();
     }
 
-    //todo get all recipes in book
-
 //UPDATE
     //update book
     public Book updateBook(int id, Book book) throws Exception {
@@ -86,20 +84,8 @@ public class BookService {
         bookRepository.deleteById(id);
     }
 
-    //delete category from book
-    public Book deleteCategoryFromBook(Integer id, Integer categoryId) throws Exception {
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new Exception("Book with id " + id + " not found"));
 
-        List<Category> newCategories = book.getCategories();
 
-        newCategories = newCategories.stream().filter(it -> !it.getCategoryId().equals(categoryId))
-                .collect(Collectors.toList());
 
-        book.setCategories(newCategories);
-        return book;
-    }
-
-    //todo delete recipe from book
 
 }

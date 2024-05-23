@@ -50,9 +50,8 @@ public class UserServiceTest {
         //sad path
     @Test
     public void testAddUser_AlreadyExists() throws Exception {
-        when(userRepository.existsById(any())).thenReturn(true);
         when(userRepository.save(any())).thenReturn(null);
-        when(userRepository.findById(any())).thenReturn(Optional.of(mockUser));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
 
         assertThrows(Exception.class, () -> {
             userService.addUser(mockUser);

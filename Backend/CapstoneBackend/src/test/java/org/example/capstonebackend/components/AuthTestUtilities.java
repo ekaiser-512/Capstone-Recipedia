@@ -15,17 +15,17 @@ public class AuthTestUtilities {
     static Auth auth = new Auth();
     public static Auth mockAuth = createMockAuth();
 
-    public static String email = "test@email.com";
-
-    private static String password = "mockPassword";
+//    public static final String email = "test@email.com";
+//
+//    private static String password = "mockPassword";
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static Auth createMockAuth() {
+    public static Auth createMockAuth() {
         Auth auth = new Auth();
         auth.setId(1);
-        auth.setEmail(email);
-        auth.setPassword(password);
+        auth.setEmail("test@email.com");
+        auth.setPassword("mockPassword");
         return auth;
     }
     public static String authToJson(Auth mockAuth) {

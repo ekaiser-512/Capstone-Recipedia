@@ -47,8 +47,8 @@ public class UserController {
     }
 
     //get user by email
-    @GetMapping("users/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) throws Exception {
+    @GetMapping("/users/email/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         try {
             User user = userService.getUserByEmail(email);
             return ResponseEntity.ok(user);

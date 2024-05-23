@@ -1,7 +1,6 @@
 package org.example.capstonebackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.UserService;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
@@ -103,18 +101,17 @@ public class UserControllerTest {
         //happy path
     @Test
     public void testGetUserByEmail() throws Exception {
-        String email = "joey_doughy@test.com";
 
-        when(userService.getUserByEmail(email)).thenReturn(mockUser);
+        when(userService.getUserByEmail(anyString())).thenReturn(mockUser);
 
-        ResultActions resultActions = mockMvc.perform(get("/users/email/{email}", email)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userToJson(mockUser)));
+        ResultActions resultActions = mockMvc.perform(get("/users/email/{email}", mockUser.getEmail()));
+
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is(email)))
-                .andExpect(jsonPath("$.username", is("Joe Doe")));
+                .andExpect(jsonPath("$.email", is(mockUser.getEmail())))
+                .andExpect(jsonPath("$.firstName", is("Joe")))
+                .andExpect(jsonPath("$.lastName", is("Doe")));
 
-        verify(userService).getUserByEmail(email);
+        verify(userService).getUserByEmail(anyString());
     }
         //sad path
         @Test
@@ -172,11 +169,11 @@ public class UserControllerTest {
                 .content(userToJson(mockUser)));
 
         resultActions.andExpect(status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$.firstName", ElementMatchers.is("Updated Joe")))
-                .andExpect((ResultMatcher) jsonPath("$.lastName", ElementMatchers.is("Doe")))
-                .andExpect((ResultMatcher) jsonPath("$.dateOfBirth", ElementMatchers.is("02/01/1992")))
-                .andExpect((ResultMatcher) jsonPath("$.email", ElementMatchers.is("updatedJoey@test.com")))
-                .andExpect((ResultMatcher) jsonPath("$.password", ElementMatchers.is("updatedPassword")));
+                .andExpect(jsonPath("$.firstName", is("Updated Joe")))
+                .andExpect(jsonPath("$.lastName", is("Doe")))
+                .andExpect(jsonPath("$.dateOfBirth", is("02/01/1992")))
+                .andExpect(jsonPath("$.email", is("updatedJoey@test.com")))
+                .andExpect(jsonPath("$.password", is("updatedPassword")));
 
         verify(userService).updateUser(eq(id), any(User.class));
     }

@@ -17,21 +17,21 @@ public class BookController {
     BookService bookService;
 
 //CREATE
-    //add book todo how do I make it so that it only allows one book to be added per user?
+    //add book
     @PostMapping("/books")
     public ResponseEntity<Book> addBook (@RequestBody Book book) throws Exception {
         try {
-            //Trying to add post
+            //Trying to add book
             Book addedBook = bookService.addBook(book);
-            //if successful, return OK (200) response with the added post
+            //if successful, return OK (200) response with the added book
             return ResponseEntity.ok(addedBook);
         } catch (Exception e) {
-            // If an exception occurs during adding the post, return Bad Request (400) response
+            // If an exception occurs during adding the book, return Bad Request (400) response
             return ResponseEntity.badRequest().build();
         }
     }
 
-    //add category to book
+    //add category to book (may be able to delete at end) todo
     @PostMapping("/users/{id}/categories/{categoryId}")
     public ResponseEntity<Book> addCategoryToBook(@PathVariable Integer id, @PathVariable Integer categoryId) throws Exception {
         try {
@@ -54,18 +54,16 @@ public class BookController {
         }
     }
 
-    //get all categories in book
+    //get all categories in book (may be able to delete at end) todo
     @GetMapping("/books/{id}/categories")
     public ResponseEntity<?> getAllCategoriesInBook(@PathVariable Integer id) throws Exception {
         try {
             List<Category> categories = bookService.getAllCategoriesInBook(id);
             return ResponseEntity.ok(categories);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failted to retrieve categories in book");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed to retrieve categories in book");
         }
     }
-
-    //todo get all recipes in book
 
 //UPDATE
     //update book
@@ -85,13 +83,5 @@ public class BookController {
     public void deleteBook(@PathVariable int id) {
         bookService.deleteBook(id);
     }
-
-    //delete category from book
-    @DeleteMapping("/books/{id}/categories/{categoryId}")
-    public void deleteCategoryFromBook(@PathVariable Integer id, @PathVariable Integer categoryId) throws Exception {
-        bookService.deleteCategoryFromBook(id, categoryId);
-    }
-
-    //todo delete recipe from book
 
 }

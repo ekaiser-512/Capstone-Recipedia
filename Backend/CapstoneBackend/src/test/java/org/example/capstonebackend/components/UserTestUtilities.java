@@ -16,27 +16,16 @@ public class UserTestUtilities {
     static User user = new User();
 
     public static final User mockUser = createMockUser();
-
-    public static String firstName = "Joe";
-
-    private static String lastName = "Doe";
-
-    private static String dateOfBirth = "02/01/1992";
-
-    private static String email = "joey_doughy@test.com";
-
-    private static String password = "mockPassword";
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private static User createMockUser() {
         User user = new User();
         user.setUserId(1);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setDateOfBirth(dateOfBirth);
-        user.setEmail(email);
-        user.setPassword(password);
+        user.setFirstName("Joe");
+        user.setLastName("Doe");
+        user.setDateOfBirth("02/01/1992");
+        user.setEmail("joey_doughy@test.com");
+        user.setPassword("mockPassword");
         return user;
     }
     public static String userToJson(User mockUser) {

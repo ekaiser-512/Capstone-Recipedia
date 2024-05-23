@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 public class CategoryController {
 
     @Autowired
@@ -40,7 +41,7 @@ public class CategoryController {
         }
     }
 
-    //add recipe to category
+    //add recipe to category(may be able to delete at end) todo
     @PostMapping("/categories/{categoryId}/recipes/{recipeId}")
     public ResponseEntity<Category> addRecipeToCategory(@PathVariable Integer categoryId, @PathVariable Integer recipeId) throws Exception {
         try {

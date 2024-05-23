@@ -3,7 +3,6 @@ package org.example.capstonebackend.components;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.capstonebackend.model.Book;
-import org.example.capstonebackend.model.Category;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.ResultActions;
 

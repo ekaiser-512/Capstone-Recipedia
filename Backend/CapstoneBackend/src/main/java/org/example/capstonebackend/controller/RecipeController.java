@@ -37,6 +37,8 @@ public class RecipeController {
         }
     }
 
+    //todo add recipe to category (currently in category controller)
+
 //READ
     //get recipe by name
     @GetMapping("/recipes/name/{name}")
@@ -76,8 +78,8 @@ public class RecipeController {
 //DELETE
     //delete recipe
 @DeleteMapping("recipes/{recipeId}")
-public void deleteRecipe(@PathVariable int id) {
-    recipeService.deleteRecipe(id);
+public void deleteRecipe(@PathVariable int recipeId) {
+    recipeService.deleteRecipe(recipeId);
 }
 
 }
