@@ -2,6 +2,7 @@ package org.example.capstonebackend.controller;
 
 import org.apache.coyote.Response;
 import org.example.capstonebackend.model.Ingredient;
+import org.example.capstonebackend.model.Recipe;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IIngredientRepository;
 import org.example.capstonebackend.service.IngredientService;
@@ -59,6 +60,12 @@ public class IngredientController {
     @GetMapping("/ingredients/commonAllergens")
     public List<Ingredient> getIngredientsThatAreCommonAllergens(@RequestBody Boolean commonAllergen) {
         return ingredientService.getIngredientsThatAreCommonAllergens(commonAllergen);
+    }
+
+    //get ingredients in recipe
+    @GetMapping("/{recipeId}/ingredients")
+    public List<Ingredient> getIngredientsInRecipe(@PathVariable Recipe recipe) {
+        return ingredientService.getIngredientsInRecipe(recipe);
     }
 
     //get all ingredients

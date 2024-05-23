@@ -67,7 +67,7 @@ public class BookServiceTest {
     private static Recipe mockRecipe(Integer recipeId) {
         Recipe recipe = new Recipe();
         recipe.setRecipeId(1);
-        recipe.setRecipeName("Test Recipe");
+        recipe.setName("Test Recipe");
         recipe.setRecipeAuthor("Test Author");
         recipe.setRecipeDescription("Its crunchy");
 

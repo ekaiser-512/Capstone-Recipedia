@@ -1,5 +1,6 @@
 package org.example.capstonebackend.service;
 
+import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.model.Ingredient;
 import org.example.capstonebackend.model.Recipe;
 import org.example.capstonebackend.repository.IIngredientRepository;
@@ -26,10 +27,10 @@ public class RecipeService {
 //CREATE
     //create recipe
     public Recipe addRecipe(Recipe recipe) throws Exception {
-        Optional<Recipe> recipeExists = recipeRepository.findByName(recipe.getRecipeName());
+        Optional<Recipe> recipeExists = recipeRepository.findByName(recipe.getName());
 
         if(recipeExists.isPresent()) {
-            throw new Exception("Recipe with name " + recipe.getRecipeName() + " already exists");
+            throw new Exception("Recipe with name " + recipe.getName() + " already exists");
         }
 
         return recipeRepository.save(recipe);
@@ -64,13 +65,10 @@ public class RecipeService {
                 .orElseThrow(() -> new Exception("Recipe with name " + recipeName + " not found"));
     }
 
-    //todo get recipe by author
-//    public Recipe getRecipeByAuthor(String recipeAuthor) throws Exception {
-//        return recipeRepository.findByAuthor(recipeAuthor)
-//                .orElseThrow(() -> new Exception("Recipe with author " + recipeAuthor + " not found"));
-//    }
-
-    //todo get all ingredients in recipe
+    //Get All Recipes in Category
+    public List<Recipe> getRecipesByCategory(Category category) {
+        return recipeRepository.findByCategory(category);
+    }
 
 
     //get all recipes
@@ -87,7 +85,7 @@ public class RecipeService {
         if(oldRecipe == null) {
             throw new Exception("Recipe with id " + recipe.getRecipeId() + " not found");
         }
-        oldRecipe.setRecipeName(recipe.getRecipeName());
+        oldRecipe.setName(recipe.getName());
         oldRecipe.setRecipeAuthor(recipe.getRecipeAuthor());
 
         return recipeRepository.save(oldRecipe);

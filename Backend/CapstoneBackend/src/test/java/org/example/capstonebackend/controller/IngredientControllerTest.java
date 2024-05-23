@@ -64,7 +64,7 @@ public class IngredientControllerTest {
     public void testAddIngredient_IngredientAlreadyExists() throws Exception {
         Ingredient ingredient = new Ingredient();
         ingredient.setIngredientId(1);
-        ingredient.setIngredientName("Salt");
+        ingredient.setName("Salt");
 
         when(ingredientService.addIngredient(any(Ingredient.class))).thenThrow(new Exception("Ingredient already exists"));
 
@@ -82,7 +82,7 @@ public class IngredientControllerTest {
         String ingredientName = "Salt";
         Ingredient ingredient = new Ingredient();
         ingredient.setIngredientId(1);
-        ingredient.setIngredientName(ingredientName);
+        ingredient.setName(ingredientName);
 
         when(ingredientService.getIngredientByName(anyString())).thenReturn(ingredient);
 
@@ -90,7 +90,7 @@ public class IngredientControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingredientId").value(1))
-                .andExpect(jsonPath("$.ingredientName").value(ingredientName));
+                .andExpect(jsonPath("$.name").value(ingredientName));
     }
         //sad path
     @Test
@@ -112,7 +112,7 @@ public class IngredientControllerTest {
         String dietaryRestriction = "Vegan";
         Ingredient ingredient = new Ingredient();
         ingredient.setIngredientId(1);
-        ingredient.setIngredientName("Tofu");
+        ingredient.setName("Tofu");
 
         when(ingredientService.getIngredientByDiet(anyString())).thenReturn(ingredient);
 
@@ -120,7 +120,7 @@ public class IngredientControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingredientId").value(1))
-                .andExpect(jsonPath("$.ingredientName").value("Tofu"));
+                .andExpect(jsonPath("$.name").value("Tofu"));
     }
         //sad path
     @Test
@@ -141,11 +141,11 @@ public class IngredientControllerTest {
         Boolean commonAllergen = true;
         Ingredient ingredient1 = new Ingredient();
         ingredient1.setIngredientId(1);
-        ingredient1.setIngredientName("Peanut");
+        ingredient1.setName("Peanut");
 
         Ingredient ingredient2 = new Ingredient();
         ingredient2.setIngredientId(2);
-        ingredient2.setIngredientName("Milk");
+        ingredient2.setName("Milk");
 
         List<Ingredient> ingredients = Arrays.asList(ingredient1, ingredient2);
 
@@ -156,9 +156,9 @@ public class IngredientControllerTest {
                         .content(new ObjectMapper().writeValueAsString(commonAllergen)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].ingredientId").value(1))
-                .andExpect(jsonPath("$[0].ingredientName").value("Peanut"))
+                .andExpect(jsonPath("$[0].name").value("Peanut"))
                 .andExpect(jsonPath("$[1].ingredientId").value(2))
-                .andExpect(jsonPath("$[1].ingredientName").value("Milk"));
+                .andExpect(jsonPath("$[1].name").value("Milk"));
     }
 
     //get all ingredients
@@ -189,11 +189,11 @@ public class IngredientControllerTest {
         int ingredientId = 1;
         Ingredient ingredient = new Ingredient();
         ingredient.setIngredientId(ingredientId);
-        ingredient.setIngredientName("Updated Ingredient");
+        ingredient.setName("Updated Ingredient");
 
         Ingredient updatedIngredient = new Ingredient();
         updatedIngredient.setIngredientId(ingredientId);
-        updatedIngredient.setIngredientName("Updated Ingredient");
+        updatedIngredient.setName("Updated Ingredient");
 
         when(ingredientService.updateIngredient(anyInt(), any(Ingredient.class))).thenReturn(updatedIngredient);
 
@@ -202,7 +202,7 @@ public class IngredientControllerTest {
                         .content(new ObjectMapper().writeValueAsString(ingredient)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingredientId").value(ingredientId))
-                .andExpect(jsonPath("$.ingredientName").value("Updated Ingredient"));
+                .andExpect(jsonPath("$.name").value("Updated Ingredient"));
     }
 
         //sad path

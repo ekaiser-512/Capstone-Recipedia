@@ -17,7 +17,7 @@ public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer recipeId;
-    private String recipeName;
+    private String name;
     private String recipeAuthor;
     private String recipeDescription;
 

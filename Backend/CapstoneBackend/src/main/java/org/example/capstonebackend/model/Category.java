@@ -16,7 +16,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer categoryId;
-    private String Title;
+    private String title;
 
     @JsonIgnore
     @ManyToOne

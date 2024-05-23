@@ -24,7 +24,7 @@ public class RecipeTestUtilites {
     private static Recipe createMockRecipe() {
         Recipe Recipe = new Recipe();
         recipe.setRecipeId(1);
-        recipe.setRecipeName("marinara sauce");
+        recipe.setName("marinara sauce");
         recipe.setRecipeAuthor("Grandma Pat");
 
         return recipe;
@@ -33,7 +33,7 @@ public class RecipeTestUtilites {
     private static Ingredient createMockIngredient() {
         Ingredient ingredient = new Ingredient();
         ingredient.setIngredientId(1);
-        ingredient.setIngredientName("cheese");
+        ingredient.setName("cheese");
         ingredient.setIngredientFoodGroup("dairy");
         ingredient.setDietaryRestriction("lactose");
         ingredient.setCommonAllergen(true);
@@ -52,7 +52,7 @@ public class RecipeTestUtilites {
     public static void compareJsonOutputRecipe(ResultActions resultActions, Recipe mockRecipe) throws Exception {
         resultActions
                 .andExpect(jsonPath("$.recipeId", is(mockRecipe.getRecipeId())))
-                .andExpect(jsonPath("$.recipeName", is(mockRecipe.getRecipeName())))
+                .andExpect(jsonPath("$.name", is(mockRecipe.getName())))
                 .andExpect(jsonPath("$.recipeAuthor", is(mockRecipe.getRecipeAuthor())));
     }
 

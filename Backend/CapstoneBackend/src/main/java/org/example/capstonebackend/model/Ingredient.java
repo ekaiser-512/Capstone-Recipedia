@@ -17,7 +17,7 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer ingredientId;
-    private String ingredientName;
+    private String name;
     private String ingredientFoodGroup;
     private Boolean commonAllergen;
     private String dietaryRestriction;

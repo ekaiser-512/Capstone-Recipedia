@@ -20,14 +20,7 @@ public class Book {
     private Integer id;
     private String title;
 
-
-    //Creating 1:N relationship between User and Book
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    //Creating 1:N relationship between Book and Recipe
+    //Creating 1:N relationship between Book and Category
     @OneToMany(mappedBy = "book")
     private List<Category> categories;
 

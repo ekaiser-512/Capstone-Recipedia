@@ -18,10 +18,10 @@ public class IngredientTestUtilities {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private static Ingredient createMockIngredient() {
+    public static Ingredient createMockIngredient() {
         Ingredient ingredient = new Ingredient();
         ingredient.setIngredientId(1);
-        ingredient.setIngredientName("cheese");
+        ingredient.setName("cheese");
         ingredient.setIngredientFoodGroup("dairy");
         ingredient.setDietaryRestriction("lactose");
         ingredient.setCommonAllergen(true);
@@ -40,7 +40,7 @@ public class IngredientTestUtilities {
     public static void compareJsonOutputIngredient(ResultActions resultActions, Ingredient mockIngredient) throws Exception {
         resultActions
                 .andExpect(jsonPath("$.ingredientId", is(mockIngredient.getIngredientId())))
-                .andExpect(jsonPath("$.ingredientName", is(mockIngredient.getIngredientName())))
+                .andExpect(jsonPath("$.name", is(mockIngredient.getName())))
                 .andExpect(jsonPath("$.ingredientFoodGroup", is(mockIngredient.getIngredientFoodGroup())))
                 .andExpect(jsonPath("$.dietaryRestriction", is(mockIngredient.getDietaryRestriction())))
                 .andExpect(jsonPath("$.commonAllergen", is(mockIngredient.getCommonAllergen())));

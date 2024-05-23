@@ -23,7 +23,7 @@ public class User {
     private String email;
     private String password;
 
-    //Creating 1:N relationship between User and Book
+    //Creating 1:1 relationship between User and Book
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     private Book book;

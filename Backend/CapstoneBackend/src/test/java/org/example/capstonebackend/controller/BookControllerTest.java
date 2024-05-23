@@ -58,7 +58,7 @@ public class BookControllerTest {
     private static Recipe createMockRecipe() {
         Recipe recipe = new Recipe();
         recipe.setRecipeId(1);
-        recipe.setRecipeName(recipeName);
+        recipe.setName(recipeName);
         recipe.setRecipeAuthor(author);
         recipe.setRecipeDescription(description);
 

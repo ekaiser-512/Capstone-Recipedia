@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.example.capstonebackend.components.IngredientTestUtilities.createMockIngredient;
 import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
 import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.*;
 public class IngredientServiceTest {
     @MockBean
     private IIngredientRepository ingredientRepository;
+
     @Autowired
     private IngredientService ingredientService;
     @Inject
@@ -36,7 +38,7 @@ public class IngredientServiceTest {
     @Test
     public void testAddIngredient() throws Exception {
         // Mock ingredientRepository to return an empty Optional when checking for existing ingredient
-        when(ingredientRepository.findByName(mockIngredient.getIngredientName())).thenReturn(Optional.empty());
+        when(ingredientRepository.findByName(mockIngredient.getName())).thenReturn(Optional.empty());
 
         // Mock ingredientRepository to return the ingredient when saving
         when(ingredientRepository.save(any(Ingredient.class))).thenReturn(mockIngredient);
@@ -51,9 +53,8 @@ public class IngredientServiceTest {
         //sad path
     @Test
     public void testAddIngredient_AlreadyExists() throws Exception {
-        when(ingredientRepository.existsById(any())).thenReturn(true);
         when(ingredientRepository.save(any())).thenReturn(null);
-        when(ingredientRepository.findById(any())).thenReturn((Optional.of(mockIngredient)));
+        when(ingredientRepository.findByName(any())).thenReturn((Optional.of(mockIngredient)));
 
         assertThrows(Exception.class, () -> {
             ingredientService.addIngredient(mockIngredient);
@@ -68,10 +69,10 @@ public class IngredientServiceTest {
     @Test
     public void testGetIngredientByName() throws Exception {
         // Mock ingredientRepository to return an Optional containing the ingredient when finding by name
-        when(ingredientRepository.findByName(mockIngredient.getIngredientName())).thenReturn(Optional.of(mockIngredient));
+        when(ingredientRepository.findByName(mockIngredient.getName())).thenReturn(Optional.of(mockIngredient));
 
         // Call the method under test
-        Ingredient result = ingredientService.getIngredientByName(mockIngredient.getIngredientName());
+        Ingredient result = ingredientService.getIngredientByName(mockIngredient.getName());
 
         // Assert that the returned ingredient is the same as the mocked ingredient
         assertEquals(mockIngredient, result);
@@ -79,13 +80,13 @@ public class IngredientServiceTest {
         //sad path
     @Test
     public void testGetIngredientByName_NotFound() throws Exception {
-        when(ingredientRepository.findByName(mockIngredient.getIngredientName())).thenReturn(Optional.empty());
+        when(ingredientRepository.findByName(mockIngredient.getName())).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
-            ingredientService.getIngredientByName(mockIngredient.getIngredientName());
+            ingredientService.getIngredientByName(mockIngredient.getName());
         });
 
-        verify(ingredientRepository).findByName(mockIngredient.getIngredientName());
+        verify(ingredientRepository).findByName(mockIngredient.getName());
     }
 
     //get ingredient by dietary restriction
@@ -93,7 +94,7 @@ public class IngredientServiceTest {
     @Test
     public void testGetIngredientByDiet() throws Exception {
         // Mock ingredientRepository to return an Optional containing the ingredient when finding by dietary restriction
-        when(ingredientRepository.findByRestriction(mockIngredient.getDietaryRestriction())).thenReturn(Optional.of(mockIngredient));
+        when(ingredientRepository.findByDietaryRestriction(mockIngredient.getDietaryRestriction())).thenReturn(Optional.of(mockIngredient));
 
         // Call the method under test
         Ingredient result = ingredientService.getIngredientByDiet(mockIngredient.getDietaryRestriction());
@@ -104,33 +105,32 @@ public class IngredientServiceTest {
         //sad path
     @Test
     public void testGetIngredientByDiet_NotFound() throws Exception {
-        when(ingredientRepository.findByRestriction(mockIngredient.getDietaryRestriction())).thenReturn(Optional.empty());
+        when(ingredientRepository.findByDietaryRestriction(mockIngredient.getDietaryRestriction())).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
             ingredientService.getIngredientByDiet(mockIngredient.getDietaryRestriction());
         });
 
-        verify(ingredientRepository).findByRestriction(mockIngredient.getDietaryRestriction());
+        verify(ingredientRepository).findByDietaryRestriction(mockIngredient.getDietaryRestriction());
     }
 
     //get list of ingredients that are common allergens
-        //happy path todo... structure here is confusing me?
-//    @Test
-//    public void testGetIngredientsThatAreCommonAllergens_HappyPath() {
-//        List<Ingredient> mockIngredients = new ArrayList<>(mockIngredient.getCommonAllergen());
-//        mockIngredients.add(new Ingredient(true));
-//        mockIngredients.add(new Ingredient(true));
-//        mockIngredients.add(new Ingredient(true));
-//
-//        // Mock ingredientRepository to return common allergens when searching by common allergen flag
-//        when(ingredientRepository.findByAllergen(true)).thenReturn(mockIngredients);
-//
-//        // Call the method under test
-//        List<Ingredient> results = ingredientService.getIngredientsThatAreCommonAllergens(true);
-//
-//        // Assert that the returned ingredients are the same as the mocked common allergens
-//        assertEquals(mockIngredients, results);
-//    }
+        //happy path
+    @Test
+    public void testGetIngredientsThatAreCommonAllergens_HappyPath() {
+        List<Ingredient> mockIngredients = new ArrayList<>();
+        mockIngredients.add(createMockIngredient());
+        mockIngredients.add(createMockIngredient());
+
+        // Mock ingredientRepository to return common allergens when searching by common allergen flag
+        when(ingredientRepository.findByCommonAllergen(true)).thenReturn(mockIngredients);
+
+        // Call the method under test
+        List<Ingredient> results = ingredientService.getIngredientsThatAreCommonAllergens(true);
+
+        // Assert that the returned ingredients are the same as the mocked common allergens
+        assertEquals(mockIngredients, results);
+    }
 
     //get list of all ingredients
         //happy path
@@ -169,10 +169,10 @@ public class IngredientServiceTest {
         when(ingredientRepository.findById(mockIngredient.getIngredientId())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(Exception.class, () -> {
-            ingredientService.getIngredientByName(mockIngredient.getIngredientName());
+            ingredientService.updateIngredient(mockIngredient.getIngredientId(), mockIngredient);
         });
 
-        assertEquals("Ingredient with name " + mockIngredient.getIngredientName() + "not found", exception.getMessage());
+        assertEquals("Ingredient with id " + mockIngredient.getIngredientId() + " not found", exception.getMessage());
     }
 
 //DELETE

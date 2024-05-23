@@ -1,6 +1,7 @@
 package org.example.capstonebackend.controller;
 
 import org.apache.coyote.Response;
+import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.model.Ingredient;
 import org.example.capstonebackend.model.Recipe;
 import org.example.capstonebackend.repository.IIngredientRepository;
@@ -22,12 +23,6 @@ public class RecipeController {
 
     @Autowired
     IRecipeRepository recipeRepository;
-
-    @Autowired
-    IngredientService ingredientService;
-
-    @Autowired
-    IIngredientRepository ingredientRepository;
 
 
 //CREATE
@@ -68,24 +63,16 @@ public class RecipeController {
         }
     }
 
-    //todo get recipes by author
-//    @GetMapping("/recipes/recipeAuthor/{recipeAuthor}")
-//    public ResponseEntity<Recipe> getRecipeByAuthor(@PathVariable String recipeAuthor) {
-//        try {
-//            Recipe recipe = recipeService.getRecipeByAuthor(recipeAuthor);
-//            return ResponseEntity.ok(recipe);
-//        } catch (Exception e) {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
-
-    //todo get ingredients in recipe
+    //Get All Recipes in Category
+    @GetMapping("/categories/{categoryId}/recipes")
+    public List<Recipe> getRecipesByCategory(@PathVariable Category category) {
+        return recipeService.getRecipesByCategory(category);
+    }
 
     //get all recipes
     @GetMapping("/recipes")
     public List<Recipe> getAllRecipes() {
-        List<Recipe> recipes = recipeService.getAllRecipes();
-        return recipes;
+        return recipeService.getAllRecipes();
     }
 
 //UPDATE
