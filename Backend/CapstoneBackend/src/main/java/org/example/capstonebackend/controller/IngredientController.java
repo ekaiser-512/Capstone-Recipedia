@@ -2,6 +2,7 @@ package org.example.capstonebackend.controller;
 
 import org.apache.coyote.Response;
 import org.example.capstonebackend.model.Ingredient;
+import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IIngredientRepository;
 import org.example.capstonebackend.service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,14 @@ public class IngredientController {
     public List<Ingredient> getIngredientsThatAreCommonAllergens(@RequestBody Boolean commonAllergen) {
         return ingredientService.getIngredientsThatAreCommonAllergens(commonAllergen);
     }
+
+    //get all ingredients
+    @GetMapping("/ingredients")
+    public List<Ingredient> getAllIngredients() {
+        List<Ingredient> ingredients = ingredientService.getAllIngredients();
+        return ingredients;
+    }
+
 
 //UPDATE
     //update ingredient
