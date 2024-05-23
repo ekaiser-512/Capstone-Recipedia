@@ -18,6 +18,7 @@ import static javax.management.Query.eq;
 import static org.example.capstonebackend.components.UserTestUtilities.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -38,7 +39,7 @@ public class UserServiceTest {
         //happy path
     @Test
     public void testAddUser() throws Exception {
-        when(userRepository.save(ArgumentMatchers.eq(mockUser))).thenReturn(mockUser);
+        when(userRepository.save(eq(mockUser))).thenReturn(mockUser);
 
         User result = userService.addUser((mockUser));
 
