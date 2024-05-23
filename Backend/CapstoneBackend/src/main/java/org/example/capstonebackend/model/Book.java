@@ -17,8 +17,9 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer bookId;
-    private String bookTitle;
+    private Integer id;
+    private String title;
+
 
     //Creating 1:N relationship between User and Book
     @JsonIgnore
@@ -29,4 +30,8 @@ public class Book {
     //Creating 1:N relationship between Book and Recipe
     @OneToMany(mappedBy = "book")
     private List<Category> categories;
+
+    public void setRecipes(List<Recipe> list) {
+    }
 }
+

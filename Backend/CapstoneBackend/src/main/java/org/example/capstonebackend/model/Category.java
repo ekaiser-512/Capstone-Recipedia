@@ -15,7 +15,7 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Integer categoryId;
     private String Title;
 
     @JsonIgnore
