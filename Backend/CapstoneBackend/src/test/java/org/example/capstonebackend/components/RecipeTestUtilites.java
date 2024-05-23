@@ -17,8 +17,6 @@ public class RecipeTestUtilites {
 
     public static final Recipe mockRecipe = createMockRecipe();
 
-    public static final Ingredient mockIngredient = createMockIngredient();
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private static Recipe createMockRecipe() {
@@ -28,17 +26,6 @@ public class RecipeTestUtilites {
         recipe.setRecipeAuthor("Grandma Pat");
 
         return recipe;
-    }
-
-    private static Ingredient createMockIngredient() {
-        Ingredient ingredient = new Ingredient();
-        ingredient.setIngredientId(1);
-        ingredient.setName("cheese");
-        ingredient.setIngredientFoodGroup("dairy");
-        ingredient.setDietaryRestriction("lactose");
-        ingredient.setCommonAllergen(true);
-
-        return ingredient;
     }
 
     public static String recipeToJson(Recipe mockRecipe) {

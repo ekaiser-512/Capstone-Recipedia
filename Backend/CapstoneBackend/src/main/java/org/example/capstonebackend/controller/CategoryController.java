@@ -63,17 +63,6 @@ public class CategoryController {
         }
     }
 
-//    //Get All Recipes in Category
-//    @GetMapping("/categories/{categoryId}/recipes")
-//    public ResponseEntity<List<Recipe>> getRecipesByCategory(@PathVariable Integer categoryId) {
-//        try {
-//            List<Recipe> recipes = categoryService.getRecipesByCategory(categoryId);
-//            return ResponseEntity.ok(recipes);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(404).body(null);
-//        }
-//    }
-
     //Get All Categories
     @GetMapping("/categories")
     public List<Category> getAllCategories() {

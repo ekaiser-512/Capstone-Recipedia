@@ -64,11 +64,6 @@ public class CategoryService {
                 .orElseThrow(() -> new Exception("Category with id " + id + " not found" ));
     }
 
-//    //Get All Recipes in Category
-//    public List<Recipe> getRecipesByCategory(Integer categoryId) throws Exception {
-//        return recipeRepository.findByCategory(categoryId);
-//    }
-
     //Get All Categories
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
