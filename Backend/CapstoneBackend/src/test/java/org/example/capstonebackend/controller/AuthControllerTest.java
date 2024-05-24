@@ -7,28 +7,18 @@ import org.example.capstonebackend.service.AuthService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.bind.annotation.DeleteMapping;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.example.capstonebackend.components.AuthTestUtilities.*;
 import static org.example.capstonebackend.components.AuthTestUtilities.authToJson;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,10 +44,9 @@ public class AuthControllerTest {
     private AuthTestUtilities authTestUtilities;
 
 
-    //CREATE
-
+//CREATE
     //add Auth
-    //happy path
+        //happy path
     @Test
     void testUserSignup() throws Exception {
         //arrange
@@ -73,7 +62,7 @@ public class AuthControllerTest {
         verify(authService).userSignup(any(Auth.class));
     }
 
-    //sad path
+        //sad path
     @Test
     void testAddAuth_UserExists() throws Exception {
         //arrange
@@ -122,7 +111,7 @@ public class AuthControllerTest {
 
     }
 
-    //sad path
+        //sad path
     @Test
     public void testGetAuthById_IdNotFound() throws Exception {
         //arrange
@@ -138,7 +127,7 @@ public class AuthControllerTest {
     }
 
     //get auth by email
-    //happy path
+        //happy path
     @Test
     public void testGetAuthByEmail() throws Exception {
         String email = "test@email.com";
@@ -157,7 +146,7 @@ public class AuthControllerTest {
         verify(authService).getAuthByEmail(email);
     }
 
-    //sad path
+        //sad path
     @Test
     public void testGetAuthByEmail_EmailNotFound() throws Exception {
         //arrange
@@ -173,9 +162,9 @@ public class AuthControllerTest {
         verify(authService).getAuthByEmail(badEmail);
     }
 
-    //UPDATE
+//UPDATE
     //update auth
-    //happy path
+         //happy path
     @Test
     public void testUpdateAuth() throws Exception {
         //arrange

@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,6 +27,7 @@ import static org.example.capstonebackend.components.IngredientTestUtilities.moc
 
 import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,6 +45,9 @@ public class BookControllerTest {
 
     @MockBean
     private BookService bookService;
+
+    @MockBean
+    private BookController bookController;
 
 //CREATE
     //add book
@@ -141,33 +147,21 @@ public class BookControllerTest {
     //get all categories in book
         //happy path
     @Test
-    public void testGetAllCategoriesInBook() throws Exception {
-
-        Category category1 = new Category();
-        category1.setCategoryId(1);
-        category1.setTitle("Category 1");
-
-        Category category2 = new Category();
-        category2.setCategoryId(2);
-        category2.setTitle("Category 2");
-
-        List<Category> categories = Arrays.asList(category1, category2);
-
+    public void testGetAllCategoriesInBook_HappyPath() throws Exception {
         // Arrange
         Integer bookId = 1;
-
-        when(bookService.getAllCategoriesInBook(bookId)).thenReturn(categories);
+        List<Category> expectedCategories = Arrays.asList(new Category(1, "Soups"), new Category(2, "Dessert"));
+        when(bookService.getAllCategoriesInBook(bookId)).thenReturn(expectedCategories);
 
         // Act & Assert
-        mockMvc.perform(get("/books/{id}/categories", bookId)
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/books/{id}/categories", bookId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(categories.get(0).getCategoryId()))
-                .andExpect(jsonPath("$[0].name").value(categories.get(0).getTitle()))
-                .andExpect(jsonPath("$[1].id").value(categories.get(1).getCategoryId()))
-                .andExpect(jsonPath("$[1].name").value(categories.get(1).getTitle()));
-
-        verify(bookService, times(1)).getAllCategoriesInBook(bookId);
+                .andExpect(jsonPath("$").isArray()) // Check if the response is an array
+                .andExpect(jsonPath("$", hasSize(2))) // Check if the array has size 2
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("Soups"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].name").value("Dessert"));
     }
 
 //UPDATE

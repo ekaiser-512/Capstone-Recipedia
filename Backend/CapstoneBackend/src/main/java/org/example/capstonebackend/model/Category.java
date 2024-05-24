@@ -25,4 +25,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     private List<Recipe> recipes;
+
+    public Category(int i, String fiction) {
+    }
 }

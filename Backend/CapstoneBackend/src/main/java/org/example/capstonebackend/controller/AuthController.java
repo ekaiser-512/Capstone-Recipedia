@@ -26,8 +26,6 @@ public class AuthController {
 
 //CREATE - we want to be able to prevent duplication of email address usage.
 
-    //add auth
-    //Notify users if the chosen username is already in use.
     //todo check if the user exists and if so sends back a status of ok as well as the username.
     @PostMapping("/users/signup")
     public ResponseEntity<Auth> userSignup(@RequestBody Auth auth) throws Exception {
@@ -85,7 +83,7 @@ public class AuthController {
         }
     }
 
-    //UPDATE
+//UPDATE
     //update auth
     @PutMapping("/auths/{id}")
     public ResponseEntity<?> updateAuth(@PathVariable int id, @RequestBody Auth auth) throws Exception {
@@ -97,5 +95,8 @@ public class AuthController {
         }
 
     }
+
+    //we do not want to allow user to delete auth. They would have to delete the entire user
+    //to prevent an account lockout bug
 
 }
