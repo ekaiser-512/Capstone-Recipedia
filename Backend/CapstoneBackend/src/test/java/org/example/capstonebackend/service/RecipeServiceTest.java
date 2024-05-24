@@ -1,11 +1,9 @@
 package org.example.capstonebackend.service;
 
-import org.example.capstonebackend.model.Ingredient;
+import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.model.Recipe;
 import org.example.capstonebackend.repository.IRecipeRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
+import static org.example.capstonebackend.components.CategoryTestUtilities.mockCategory;
 import static org.example.capstonebackend.components.RecipeTestUtilites.mockRecipe;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -77,8 +75,44 @@ public class RecipeServiceTest {
         verify(recipeRepository).findByName(mockRecipe.getName());
     }
 
-    // todo get all recipes in category
+    //get all recipes in category
         //happy path
+    @Test
+    void testGetRecipesByCategory() {
+        // Arrange
+        List<Recipe> mockRecipes = new ArrayList<>();
+        mockRecipes.add(new Recipe());
+        mockRecipes.add(new Recipe());
+        mockRecipes.add(new Recipe());
+
+
+        when(recipeRepository.findByCategory(mockCategory)).thenReturn(mockRecipes);
+
+        // Act
+        List<Recipe> actualRecipes = recipeService.getRecipesByCategory(mockCategory);
+
+        // Assert
+        assertEquals(mockRecipes.size(), actualRecipes.size());
+        for (int i = 0; i < mockRecipes.size(); i++) {
+            assertEquals(mockRecipes.get(i), actualRecipes.get(i));
+        }
+        verify(recipeRepository, times(1)).findByCategory(mockCategory); // Verify method invocation
+    }
+        //sad path
+    @Test
+    void testGetRecipesByCategory_NoRecipesFound() {
+        // Arrange
+        Category category = new Category();
+
+        when(recipeRepository.findByCategory(category)).thenReturn(new ArrayList<>()); // Empty list when no recipes found
+
+        // Act
+        List<Recipe> actualRecipes = recipeService.getRecipesByCategory(category);
+
+        // Assert
+        assertEquals(0, actualRecipes.size()); // Assert no recipes were returned
+        verify(recipeRepository, times(1)).findByCategory(category); // Verify method invocation
+    }
 
     //get all recipes
         //happy path

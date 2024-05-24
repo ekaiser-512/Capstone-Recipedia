@@ -2,6 +2,7 @@ package org.example.capstonebackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.bytebuddy.matcher.ElementMatchers;
+import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.model.Ingredient;
 import org.example.capstonebackend.model.Recipe;
 import org.example.capstonebackend.model.User;
@@ -21,15 +22,18 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.example.capstonebackend.components.CategoryTestUtilities.mockCategory;
 import static org.example.capstonebackend.components.IngredientTestUtilities.ingredientToJson;
 import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
 import static org.example.capstonebackend.components.RecipeTestUtilites.mockRecipe;
 import static org.example.capstonebackend.components.RecipeTestUtilites.recipeToJson;
 import static org.example.capstonebackend.components.UserTestUtilities.*;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,6 +50,9 @@ public class RecipeControllerTest {
 
     @MockBean
     RecipeService recipeService;
+
+    @MockBean
+    RecipeController recipeController;
 
 //CREATE
     //create recipe
@@ -107,6 +114,26 @@ public class RecipeControllerTest {
         verify(recipeService).getRecipeByName(badName);
     }
 
+    //todo get recipes by category
+    @Test
+    void testGetRecipesByCategory() {
+        // Arrange
+        Category category = new Category(); // Create a real Category object
+        List<Recipe> mockRecipes = new ArrayList<>();
+        mockRecipes.add(new Recipe());
+        mockRecipes.add(new Recipe());
+        mockRecipes.add(new Recipe());
+
+        when(recipeService.getRecipesByCategory(category)).thenReturn(mockRecipes);
+
+        // Act
+        List<Recipe> actualRecipes = recipeController.getRecipesByCategory(mockCategory);
+
+        // Assert
+        assertEquals(mockRecipes.size(), actualRecipes.size()); // Assert size of returned list
+        assertEquals(mockRecipes, actualRecipes); // Assert content of returned list
+        verify(recipeService, times(1)).getRecipesByCategory(category); // Verify method invocation
+    }
 
     //get all recipes
         //happy path
@@ -173,14 +200,14 @@ public void testUpdateRecipe() throws Exception {
     //delete recipe
     @Test
     public void testDeleteRecipe() throws Exception {
-        int id = 1;
+        int recipeId = 1;
 
         doNothing().when(recipeService).deleteRecipe(anyInt());
 
-        ResultActions resultActions = mockMvc.perform(delete("/recipes/{recipeId}", id)
+        ResultActions resultActions = mockMvc.perform(delete("/recipes/{recipeId}", recipeId)
                 .contentType(MediaType.APPLICATION_JSON));
         resultActions.andExpect(status().isOk());
 
-        verify(recipeService).deleteRecipe(id);
+        verify(recipeService).deleteRecipe(recipeId);
     }
 }

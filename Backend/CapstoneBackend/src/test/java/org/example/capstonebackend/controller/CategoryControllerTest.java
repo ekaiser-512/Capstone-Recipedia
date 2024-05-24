@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.model.Ingredient;
 import org.example.capstonebackend.repository.ICategoryRepository;
+import org.example.capstonebackend.repository.IRecipeRepository;
 import org.example.capstonebackend.service.CategoryService;
+import org.example.capstonebackend.service.RecipeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -38,6 +40,12 @@ private ICategoryRepository categoryRepository;
 
 @MockBean
 private CategoryService categoryService;
+
+@MockBean
+private IRecipeRepository recipeRepository;
+
+@MockBean
+private RecipeService recipeService;
 
 //CREATE
     //create category
