@@ -12,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.List;
 import static org.example.capstonebackend.components.IngredientTestUtilities.ingredientToJson;
 import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
 
-import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

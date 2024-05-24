@@ -32,7 +32,7 @@ public class BookController {
     }
 
     //add category to book (may be able to delete at end) todo
-    @PostMapping("/users/{id}/categories/{categoryId}")
+    @PostMapping("/books/{id}/categories/{categoryId}")
     public ResponseEntity<Book> addCategoryToBook(@PathVariable Integer id, @PathVariable Integer categoryId) throws Exception {
         try {
             Book book = bookService.addCategoryToBook(id, categoryId);

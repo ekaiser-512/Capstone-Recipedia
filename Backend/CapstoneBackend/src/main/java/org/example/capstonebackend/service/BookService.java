@@ -38,7 +38,7 @@ public class BookService {
         return bookRepository.save(book);
     }
 
-    //add category to book todo move to category entity
+    //add category to book (may be able to delete at end) todo
     public Book addCategoryToBook(Integer id, Integer categoryId) throws Exception {
         Book book = bookRepository.findById(id).orElseThrow(() -> new Exception("Book with id " + id + " not found"));
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new Exception("Category with id " + categoryId  + " not found"));
@@ -58,7 +58,7 @@ public class BookService {
                 .orElseThrow(() -> new Exception("Book with id " + id + " not found"));
     }
 
-    //get all categories in book
+    //get all categories in book (may be able to delete at end) todo
     public List<Category> getAllCategoriesInBook(Integer id) throws Exception {
         Book book = bookRepository.findById(id).orElseThrow(() -> new Exception("Book with id " + id + " not found"));
         return book.getCategories();

@@ -1,77 +1,227 @@
 package org.example.capstonebackend.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.checkerframework.checker.units.qual.C;
 import org.example.capstonebackend.model.Book;
 import org.example.capstonebackend.model.Category;
-import org.example.capstonebackend.model.Recipe;
+import org.example.capstonebackend.model.Ingredient;
+import org.example.capstonebackend.repository.IBookRepository;
 import org.example.capstonebackend.service.BookService;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
-@Import(BookController.class)
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.example.capstonebackend.components.BookTestUtilities.bookToJson;
+import static org.example.capstonebackend.components.BookTestUtilities.mockBook;
+import static org.example.capstonebackend.components.IngredientTestUtilities.ingredientToJson;
+import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
+
+import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
 @WebMvcTest(BookController.class)
 public class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    private IBookRepository bookRepository;
+
+    @MockBean
     private BookService bookService;
 
-    @InjectMocks
-    BookController bookController;
+//CREATE
+    //add book
+        //sad path
+    @Test
+    public void testAddBook() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String bookToJson = objectMapper.writeValueAsString(mockBook);
 
-    private final Book mockBook = createMockBook();
-    private final Category mockCategory = createMockCategory();
-    private final Recipe mockRecipe = createMockRecipe();
+        when(bookService.addBook(any(Book.class))).thenReturn(mockBook);
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+        ResultActions resultActions = mockMvc.perform(post("/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(bookToJson));
+        resultActions.andExpect(status().isOk());
 
-    private static final String title = "Test CookBook";
-
-    private static final String recipeName = "Test Recipe";
-    private static final String author = "Test Author";
-    private static final String description = "crunchy";
-
-    private static Book createMockBook() {
+        verify(bookService).addBook(any(Book.class));
+    }
+        //sad path
+    @Test
+    public void testAddBook_BookAlreadyExists() throws Exception {
         Book book = new Book();
         book.setId(1);
-        book.setTitle(title);
+        book.setTitle("Emily's Cook Book");
 
-        return book;
+        when(bookService.addBook(any(Book.class))).thenThrow(new Exception("Book already exists"));
+
+        mockMvc.perform(post("/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(book)))
+                .andExpect(status().isBadRequest());
     }
 
-    private static Category createMockCategory() {
-        Category category = new Category();
-        category.setCategoryId(1);
-        category.setTitle("Test Category");
+    //add category to book
+        //happy path
+    @Test
+    public void testAddCategoryToBook() throws Exception {
+        // Arrange
+        Integer bookId = 1;
+        Integer categoryId = 1;
 
-        return category;
+        when(bookService.addCategoryToBook(bookId, categoryId)).thenReturn(mockBook);
+
+        // Act & Assert
+        mockMvc.perform(post("/books/{id}/categories/{categoryId}", bookId, categoryId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(mockBook.getId()))
+                .andExpect(jsonPath("$.title").value(mockBook.getTitle()));
+
+        verify(bookService, times(1)).addCategoryToBook(bookId, categoryId);
     }
 
-    private static Recipe createMockRecipe() {
-        Recipe recipe = new Recipe();
-        recipe.setRecipeId(1);
-        recipe.setName(recipeName);
-        recipe.setRecipeAuthor(author);
-        recipe.setRecipeDescription(description);
+        //sad path
+    @Test
+    public void testAddCategoryToBook_NotFound() throws Exception {
+        // Arrange
+        Integer bookId = 1;
+        Integer categoryId = 1;
 
-        return recipe;
+        when(bookService.addCategoryToBook(bookId, categoryId)).thenThrow(new Exception("Book or category not found"));
+
+        // Act & Assert
+        mockMvc.perform(post("/books/{id}/categories/{categoryId}", bookId, categoryId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        verify(bookService, times(1)).addCategoryToBook(bookId, categoryId);
     }
 
-    private String objectToJson (Object object) {
-        try {
-            return objectMapper.writeValueAsString(object);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+//READ
+    //get book
+        //happy path
+    @Test
+    public void testGetBookById() throws Exception {
+        Integer bookId = 1;
+
+        when(bookService.getBookById(anyInt())).thenReturn(mockBook);
+
+        mockMvc.perform(get("/books/{id}", bookId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
+        //sad path
+    @Test
+    public void testGetBookById_IdNotFound() throws Exception {
+        when(bookService.getBookById(mockBook.getId())).thenThrow(new Exception("Book with id " + mockBook.getId() + " not found"));
+
+        mockMvc.perform(get("/books/{id}", mockBook.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        verify(bookService).getBookById(mockBook.getId());
+    }
+
+    //get all categories in book
+        //happy path
+    @Test
+    public void testGetAllCategoriesInBook() throws Exception {
+
+        Category category1 = new Category();
+        category1.setCategoryId(1);
+        category1.setTitle("Category 1");
+
+        Category category2 = new Category();
+        category2.setCategoryId(2);
+        category2.setTitle("Category 2");
+
+        List<Category> categories = Arrays.asList(category1, category2);
+
+        // Arrange
+        Integer bookId = 1;
+
+        when(bookService.getAllCategoriesInBook(bookId)).thenReturn(categories);
+
+        // Act & Assert
+        mockMvc.perform(get("/books/{id}/categories", bookId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(categories.get(0).getCategoryId()))
+                .andExpect(jsonPath("$[0].name").value(categories.get(0).getTitle()))
+                .andExpect(jsonPath("$[1].id").value(categories.get(1).getCategoryId()))
+                .andExpect(jsonPath("$[1].name").value(categories.get(1).getTitle()));
+
+        verify(bookService, times(1)).getAllCategoriesInBook(bookId);
+    }
+
+//UPDATE
+    //update book
+        //happy path
+@Test
+public void testUpdateBook() throws Exception {
+    int bookId = 1;
+    Book book = new Book();
+    book.setId(bookId);
+    book.setTitle("Updated Book");
+
+    Book updatedBook = new Book();
+    updatedBook.setId(bookId);
+    updatedBook.setTitle("Updated Book");
+
+    when(bookService.updateBook(anyInt(), any(Book.class))).thenReturn(updatedBook);
+
+    mockMvc.perform(put("/books/{id}", bookId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(new ObjectMapper().writeValueAsString(book)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id").value(bookId))
+            .andExpect(jsonPath("$.title").value("Updated Book"));
+}
+
+        //sad path
+    @Test
+    public void TestUpdateBook_IdDoesNotExist() throws Exception {
+        when(bookService.updateBook(anyInt(), any(Book.class))).thenThrow(new Exception("Book with id " + mockBook.getId() + " not found"));
+
+        mockMvc.perform(put("/books/{id}", mockBook.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(bookToJson(mockBook)))
+                .andExpect(status().isNotFound());
+
+        verify(bookService).updateBook(any(Integer.class), any(Book.class));
+    }
+
+//DELETE
+    //delete book
+        //happy path
+    @Test public void testDeleteBook() throws Exception {
+        int id = 1;
+
+        doNothing().when(bookService).deleteBook(anyInt());
+
+        ResultActions resultActions = mockMvc.perform(delete("/books/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON));
+        resultActions.andExpect(status().isOk());
+
+        verify(bookService).deleteBook(id);
+    }
+
 
 
 }
