@@ -1,0 +1,26 @@
+/* Footer styles */
+
+footer {
+    background-color: #333;
+    color: whitesmoke;
+    padding: 2rem;
+    height: 200;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+  
+  .footer-section h4 {
+    margin-bottom: 1rem;
+  }
+  
+  .footer-section ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+  }
