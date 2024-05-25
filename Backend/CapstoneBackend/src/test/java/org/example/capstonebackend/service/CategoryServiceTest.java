@@ -32,7 +32,7 @@ public class CategoryServiceTest {
         //happy path
     @Test
     public void testAddCategory() throws Exception {
-        when(categoryRepository.findById(mockCategory.getCategoryId())).thenReturn(Optional.empty());
+        when(categoryRepository.findById(mockCategory.getId())).thenReturn(Optional.empty());
 
         when(categoryRepository.save(any(Category.class))).thenReturn(mockCategory);
 
@@ -60,22 +60,22 @@ public class CategoryServiceTest {
         //happy path
     @Test
     public void testGetCategoryById() throws Exception {
-        when(categoryRepository.findById(mockCategory.getCategoryId())).thenReturn(Optional.of(mockCategory));
+        when(categoryRepository.findById(mockCategory.getId())).thenReturn(Optional.of(mockCategory));
 
-        Category result = categoryService.getCategoryById(mockCategory.getCategoryId());
+        Category result = categoryService.getCategoryById(mockCategory.getId());
 
         assertEquals(mockCategory, result);
     }
         //sad path
     @Test
     public void testGetCategoryById_NotFound() throws Exception {
-        when(categoryRepository.findById(mockCategory.getCategoryId())).thenReturn(Optional.empty());
+        when(categoryRepository.findById(mockCategory.getId())).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
-            categoryService.getCategoryById(mockCategory.getCategoryId());
+            categoryService.getCategoryById(mockCategory.getId());
         });
 
-        verify(categoryRepository).findById(mockCategory.getCategoryId());
+        verify(categoryRepository).findById(mockCategory.getId());
     }
 
     //get all categories
@@ -111,13 +111,13 @@ public class CategoryServiceTest {
         //sad path
     @Test
     public void testUpdateCategory_CategoryNotFound() throws Exception {
-        when(categoryRepository.findById(mockCategory.getCategoryId())).thenReturn(Optional.empty());
+        when(categoryRepository.findById(mockCategory.getId())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(Exception.class, () -> {
-            categoryService.updateCategory(mockCategory.getCategoryId(), mockCategory);
+            categoryService.updateCategory(mockCategory.getId(), mockCategory);
         });
 
-        assertEquals("Category with id " + mockCategory.getCategoryId() + " not found", exception.getMessage());
+        assertEquals("Category with id " + mockCategory.getId() + " not found", exception.getMessage());
     }
 
 
@@ -128,9 +128,9 @@ public class CategoryServiceTest {
     public void deleteCategory() {
         doNothing().when(categoryRepository).deleteById(anyInt());
 
-        categoryService.deleteCategory(mockCategory.getCategoryId());
+        categoryService.deleteCategory(mockCategory.getId());
 
-        verify(categoryRepository).deleteById(mockCategory.getCategoryId());
+        verify(categoryRepository).deleteById(mockCategory.getId());
     }
 
 }

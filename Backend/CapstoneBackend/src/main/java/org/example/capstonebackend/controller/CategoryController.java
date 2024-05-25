@@ -86,7 +86,7 @@ public class CategoryController {
 //DELETE
     //Delete Category
     @DeleteMapping("/categories/{categoryId}")
-    public void deleteRecipe(@PathVariable int id) {
-        categoryService.deleteCategory(id);
+    public void deleteCategory(@PathVariable int categoryId) {
+        categoryService.deleteCategory(categoryId);
     }
 }

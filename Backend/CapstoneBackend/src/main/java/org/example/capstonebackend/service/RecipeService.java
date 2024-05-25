@@ -44,8 +44,8 @@ public class RecipeService {
     }
 
     //Get All Recipes in Category
-    public List<Recipe> getRecipesByCategory(Category category) {
-        return recipeRepository.findByCategory(category);
+    public List<Recipe> getRecipesByCategory(Integer categoryId) {
+        return recipeRepository.findByCategoryId(categoryId);
     }
 
 

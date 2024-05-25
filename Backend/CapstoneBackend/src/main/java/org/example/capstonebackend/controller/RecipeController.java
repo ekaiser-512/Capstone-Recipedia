@@ -51,8 +51,8 @@ public class RecipeController {
 
     //Get All Recipes in Category
     @GetMapping("/categories/{categoryId}/recipes")
-    public List<Recipe> getRecipesByCategory(@PathVariable Category category) {
-        return recipeService.getRecipesByCategory(category);
+    public List<Recipe> getRecipesByCategory(@PathVariable Integer categoryId) {
+        return recipeService.getRecipesByCategory(categoryId);
     }
 
     //get all recipes

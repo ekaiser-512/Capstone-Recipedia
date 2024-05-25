@@ -70,7 +70,7 @@ public class BookServiceTest {
         book.setCategories(new ArrayList<>());
 
         Category category = new Category();
-        category.setCategoryId(categoryId);
+        category.setId(categoryId);
 
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
@@ -163,11 +163,11 @@ public class BookServiceTest {
 
         List<Category> categories = new ArrayList<>();
         Category category1 = new Category();
-        category1.setCategoryId(1);
+        category1.setId(1);
         categories.add(category1);
 
         Category category2 = new Category();
-        category2.setCategoryId(2);
+        category2.setId(2);
         categories.add(category2);
 
         book.setCategories(categories);

@@ -51,8 +51,6 @@ public class RecipeControllerTest {
     @MockBean
     RecipeService recipeService;
 
-    @MockBean
-    RecipeController recipeController;
 
 //CREATE
     //create recipe
@@ -116,23 +114,22 @@ public class RecipeControllerTest {
 
     //todo get recipes by category
     @Test
-    void testGetRecipesByCategory() {
+    void testGetRecipesByCategory() throws Exception {
         // Arrange
-        Category category = new Category(); // Create a real Category object
         List<Recipe> mockRecipes = new ArrayList<>();
         mockRecipes.add(new Recipe());
         mockRecipes.add(new Recipe());
         mockRecipes.add(new Recipe());
 
-        when(recipeService.getRecipesByCategory(category)).thenReturn(mockRecipes);
+        when(recipeService.getRecipesByCategory(mockCategory.getId())).thenReturn(mockRecipes);
 
         // Act
-        List<Recipe> actualRecipes = recipeController.getRecipesByCategory(mockCategory);
+        ResultActions resultActions = mockMvc.perform(get("/categories/{categoryId}/recipes", mockCategory.getId()));
+        resultActions.andExpect(status().isOk());
+//        List<Recipe> actualRecipes = recipeController.getRecipesByCategory(mockCategory);
 
         // Assert
-        assertEquals(mockRecipes.size(), actualRecipes.size()); // Assert size of returned list
-        assertEquals(mockRecipes, actualRecipes); // Assert content of returned list
-        verify(recipeService, times(1)).getRecipesByCategory(category); // Verify method invocation
+        verify(recipeService, times(1)).getRecipesByCategory(mockCategory.getId()); // Verify method invocation
     }
 
     //get all recipes

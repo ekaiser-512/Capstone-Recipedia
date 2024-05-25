@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface IRecipeRepository extends JpaRepository<Recipe, Integer> {
     Optional<Recipe> findByName(String recipeName);
 
-    List<Recipe> findByCategory(Category category);
+    List<Recipe> findByCategoryId(Integer categoryId);
 
 //    Optional<Object> findByAuthor(String recipeAuthor);
 }

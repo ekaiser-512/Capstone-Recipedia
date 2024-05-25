@@ -15,7 +15,7 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer categoryId;
+    private Integer id;
     private String title;
 
     @JsonIgnore
@@ -26,6 +26,5 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Recipe> recipes;
 
-    public Category(int i, String fiction) {
-    }
+
 }

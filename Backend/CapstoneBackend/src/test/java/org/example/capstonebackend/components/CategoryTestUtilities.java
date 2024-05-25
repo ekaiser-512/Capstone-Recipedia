@@ -19,7 +19,7 @@ public class CategoryTestUtilities {
 
     private static Category createMockCategory() {
         Category category = new Category();
-        category.setCategoryId(1);
+        category.setId(1);
         category.setTitle("Desserts");
 
         return category;
@@ -35,7 +35,7 @@ public class CategoryTestUtilities {
 
     public static void compareJsonOutputCategory(ResultActions resultActions, Category mockCategory) throws Exception {
         resultActions
-                .andExpect(jsonPath("$.categoryId", is(mockCategory.getCategoryId())))
+                .andExpect(jsonPath("$.categoryId", is(mockCategory.getId())))
                 .andExpect(jsonPath("$.title", is(mockCategory.getTitle())));
     }
 }

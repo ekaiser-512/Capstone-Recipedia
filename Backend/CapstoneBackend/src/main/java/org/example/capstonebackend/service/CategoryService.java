@@ -28,10 +28,10 @@ public class CategoryService {
 //CREATE
     //create category
     public Category addCategory(Category category) throws Exception {
-        Optional<Category> categoryExists = categoryRepository.findById(category.getCategoryId());
+        Optional<Category> categoryExists = categoryRepository.findById(category.getId());
 
         if(categoryExists.isPresent()) {
-            throw new Exception("Category with id " + category.getCategoryId() + " already exists");
+            throw new Exception("Category with id " + category.getId() + " already exists");
         }
 
         return categoryRepository.save(category);
@@ -75,10 +75,10 @@ public class CategoryService {
 //UPDATE
     //Update Category
     public Category updateCategory(int id, Category category) throws Exception {
-        Category oldCategory = categoryRepository.findById(category.getCategoryId()).orElse(null);
+        Category oldCategory = categoryRepository.findById(category.getId()).orElse(null);
 
         if (oldCategory == null) {
-            throw new Exception("Category with id " + category.getCategoryId() + " not found");
+            throw new Exception("Category with id " + category.getId() + " not found");
         }
         oldCategory.setTitle(category.getTitle());
 

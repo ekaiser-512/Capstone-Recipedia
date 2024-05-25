@@ -86,17 +86,17 @@ public class RecipeServiceTest {
         mockRecipes.add(new Recipe());
 
 
-        when(recipeRepository.findByCategory(mockCategory)).thenReturn(mockRecipes);
+        when(recipeRepository.findByCategoryId(mockCategory.getId())).thenReturn(mockRecipes);
 
         // Act
-        List<Recipe> actualRecipes = recipeService.getRecipesByCategory(mockCategory);
+        List<Recipe> actualRecipes = recipeService.getRecipesByCategory(mockCategory.getId());
 
         // Assert
         assertEquals(mockRecipes.size(), actualRecipes.size());
         for (int i = 0; i < mockRecipes.size(); i++) {
             assertEquals(mockRecipes.get(i), actualRecipes.get(i));
         }
-        verify(recipeRepository, times(1)).findByCategory(mockCategory); // Verify method invocation
+        verify(recipeRepository, times(1)).findByCategoryId(mockCategory.getId()); // Verify method invocation
     }
         //sad path
     @Test
@@ -104,14 +104,14 @@ public class RecipeServiceTest {
         // Arrange
         Category category = new Category();
 
-        when(recipeRepository.findByCategory(category)).thenReturn(new ArrayList<>()); // Empty list when no recipes found
+        when(recipeRepository.findByCategoryId(category.getId())).thenReturn(new ArrayList<>()); // Empty list when no recipes found
 
         // Act
-        List<Recipe> actualRecipes = recipeService.getRecipesByCategory(category);
+        List<Recipe> actualRecipes = recipeService.getRecipesByCategory(category.getId());
 
         // Assert
         assertEquals(0, actualRecipes.size()); // Assert no recipes were returned
-        verify(recipeRepository, times(1)).findByCategory(category); // Verify method invocation
+        verify(recipeRepository, times(1)).findByCategoryId(category.getId()); // Verify method invocation
     }
 
     //get all recipes

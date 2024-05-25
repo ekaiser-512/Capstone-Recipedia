@@ -69,7 +69,7 @@ private RecipeService recipeService;
     @Test
     public void testAddCategory_AlreadyExists() throws Exception {
         Category category = new Category();
-        category.setCategoryId(1);
+        category.setId(1);
         category.setTitle("Dessert");
 
         when(categoryService.addCategory(any(Category.class))).thenThrow(new Exception("Category already exists"));
@@ -94,18 +94,18 @@ private RecipeService recipeService;
         mockMvc.perform(get("/categories/{id}", categoryId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.categoryId").value(1));
+                .andExpect(jsonPath("$.id").value(1));
     }
         //sad path
     @Test
     public void testGetCategoryById_IdNotFound() throws Exception {
-        when(categoryService.getCategoryById(mockCategory.getCategoryId())).thenThrow(new Exception("Category with id " + mockCategory.getCategoryId() + " not found"));
+        when(categoryService.getCategoryById(mockCategory.getId())).thenThrow(new Exception("Category with id " + mockCategory.getId() + " not found"));
 
-        mockMvc.perform(get("/categories/{id}", mockCategory.getCategoryId())
+        mockMvc.perform(get("/categories/{id}", mockCategory.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        verify(categoryService).getCategoryById(mockCategory.getCategoryId());
+        verify(categoryService).getCategoryById(mockCategory.getId());
     }
 
 
@@ -136,11 +136,11 @@ private RecipeService recipeService;
 public void testUpdateCategory() throws Exception {
     int categoryId = 1;
     Category category = new Category();
-    category.setCategoryId(categoryId);
+    category.setId(categoryId);
     category.setTitle("Updated Category");
 
     Category updatedCategory = new Category();
-    updatedCategory.setCategoryId(categoryId);
+    updatedCategory.setId(categoryId);
     updatedCategory.setTitle("Updated Category");
 
     when(categoryService.updateCategory(anyInt(), any(Category.class))).thenReturn(updatedCategory);
@@ -149,16 +149,16 @@ public void testUpdateCategory() throws Exception {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(new ObjectMapper().writeValueAsString(category)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.categoryId").value(categoryId))
+            .andExpect(jsonPath("$.id").value(categoryId))
             .andExpect(jsonPath("$.title").value("Updated Category"));
 }
 
         //sad path
     @Test
     public void TestUpdateCategory_IdDoesNotExist() throws Exception {
-        when(categoryService.updateCategory(anyInt(), any(Category.class))).thenThrow(new Exception("Category with id " + mockCategory.getCategoryId() + " not found"));
+        when(categoryService.updateCategory(anyInt(), any(Category.class))).thenThrow(new Exception("Category with id " + mockCategory.getId() + " not found"));
 
-        mockMvc.perform(put("/categories/{categoryId}", mockCategory.getCategoryId())
+        mockMvc.perform(put("/categories/{categoryId}", mockCategory.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(categoryToJson(mockCategory)))
                 .andExpect(status().isNotFound());

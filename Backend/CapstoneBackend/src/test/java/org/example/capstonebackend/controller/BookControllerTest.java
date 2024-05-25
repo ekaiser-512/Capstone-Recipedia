@@ -25,7 +25,9 @@ import static org.example.capstonebackend.components.BookTestUtilities.mockBook;
 import static org.example.capstonebackend.components.IngredientTestUtilities.ingredientToJson;
 import static org.example.capstonebackend.components.IngredientTestUtilities.mockIngredient;
 
+import static org.example.capstonebackend.components.RecipeTestUtilites.mockRecipe;
 import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
+import static org.hibernate.internal.util.collections.CollectionHelper.listOf;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,8 +48,6 @@ public class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-    @MockBean
-    private BookController bookController;
 
 //CREATE
     //add book
@@ -150,7 +150,9 @@ public class BookControllerTest {
     public void testGetAllCategoriesInBook_HappyPath() throws Exception {
         // Arrange
         Integer bookId = 1;
-        List<Category> expectedCategories = Arrays.asList(new Category(1, "Soups"), new Category(2, "Dessert"));
+        Category category1 = new Category(1, "Soups", mockBook, listOf(mockRecipe));
+        Category category2 = new Category(2, "Dessert", mockBook, listOf(mockRecipe));
+        List<Category> expectedCategories = Arrays.asList(category1, category2);
         when(bookService.getAllCategoriesInBook(bookId)).thenReturn(expectedCategories);
 
         // Act & Assert
@@ -159,9 +161,9 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$").isArray()) // Check if the response is an array
                 .andExpect(jsonPath("$", hasSize(2))) // Check if the array has size 2
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("Soups"))
+                .andExpect(jsonPath("$[0].title").value("Soups"))
                 .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].name").value("Dessert"));
+                .andExpect(jsonPath("$[1].title").value("Dessert"));
     }
 
 //UPDATE
