@@ -1,26 +1,62 @@
 /* Footer styles */
 
 footer {
-    background-color: #333;
-    color: whitesmoke;
-    padding: 2rem;
-    height: 200;
-  }
-  
-  .footer-content {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-  }
-  
-  .footer-section h4 {
-    margin-bottom: 1rem;
-  }
-  
-  .footer-section ul li {
-    margin-bottom: 0.5rem;
-  }
-  
-  .footer-bottom {
-    text-align: center;
-  }
+  background-color: #333;
+  color: whitesmoke;
+  padding: 1rem;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 150px;
+  margin: 0.5rem;
+}
+
+.contact-socials {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.contact-info {
+  text-align: left;
+}
+
+.contact-info h4 {
+  margin-bottom: 0.5rem;
+}
+
+.contact-info p {
+  margin: 0.5rem 0;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-links a {
+  color: whitesmoke;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.social-links a:hover {
+  color: #ff6347; /* Tomato color for hover effect */
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 1rem;
+  border-top: 1px solid #444;
+  padding-top: 0.5rem;
+}

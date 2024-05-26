@@ -2,7 +2,7 @@ import Button from "../Button/Button";
 import Input from "../Input/Input";
 import "./Auth.css"
 
-const Signup = ({signupFormData, setSignupFormData}, handleSignup) => {
+const Signup = ({ signupFormData, setSignupFormData, handleSignup }) => {
 
     const handleChange = (event) => {
         const{ name, value } = event.target;

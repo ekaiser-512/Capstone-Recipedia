@@ -29,8 +29,8 @@ const handleLogin = async () => {
 }
 
 const handleSignup = async () => {
-    const response2 = await postData("users/signup", signupFormData)
-    console.log(response2);
+    const response = await postData("users/signup", signupFormData)
+    console.log(response);
 }
 
 const toggleAuthMode = () => {
