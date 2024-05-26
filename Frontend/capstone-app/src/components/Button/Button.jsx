@@ -1,10 +1,13 @@
-import './Button.css'
+import './Button.css';
 
-const Button = ({text, handleClick, style}) => {
+const Button = ({ text, handleClick, theme }) => {
+  const buttonClass = theme === 'dark' ? 'button-dark' : 'button-light';
 
-    return (
-        <button onClick={handleClick} className={`button ${style}`}>{text}</button>
-    )
-}
+  return (
+    <button onClick={handleClick} className={`button ${buttonClass}`}>
+      {text}
+    </button>
+  );
+};
 
 export default Button;

@@ -1,4 +1,12 @@
-.button {
+/* Button.css */
+:root {
+    --button-bg-light: whitesmoke;
+    --button-text-light: #333;
+    --button-bg-dark: #333;
+    --button-text-dark: whitesmoke;
+  }
+  
+  .button {
     width: 90px;
     height: 50px;
     border: none;
@@ -6,16 +14,14 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
-}
-
-.button-light {
-    background-color: whitesmoke;
-    color: #333;
-
-}
-
-.button-dark {
-    background-color: #333;
-    margin: 10px;
-    color: whitesmoke;
-}
+  }
+  
+  .button-light {
+    background-color: var(--button-bg-light);
+    color: var(--button-text-light);
+  }
+  
+  .button-dark {
+    background-color: var(--button-bg-dark);
+    color: var(--button-text-dark);
+  }
