@@ -13,7 +13,8 @@ const Signup = ({signupFormData, setSignupFormData}, handleSignup) => {
     }
 
     const onSignupButtonClick = (event) => {
-        event.preventDefault()
+        event.preventDefault()  
+        console.log(signupFormData)
         handleSignup()
     }
 
