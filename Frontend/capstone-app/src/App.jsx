@@ -8,10 +8,11 @@ import Profile from "./containers/Profile/Profile";
 import Search from "./containers/Search/Search";
 import { useState, useEffect } from "react";
 import {ThemeContext} from './contexts/Theme'
-// import { AuthProvider } from "./components/Auth/AuthContext";
 import Footer from "./containers/Footer/Footer";
+import { AuthContext } from "./contexts/AuthContext";
 import "./App.css";
 const App = () => {
+  const[currentUsername, setCurrentUsername] = useState(null)
   const[theme, setTheme] = useState("light")
 
   useEffect(() => {
@@ -30,10 +31,10 @@ const App = () => {
   };
 
   return (
-        // <AuthProvider>
+    <AuthContext.Provider {...{currentUsername, setCurrentUsername}}>
     <ThemeContext.Provider value ={{theme, setTheme: toggleTheme}}>
     <main className={theme}>
-      <Header />
+      <Header currentUsername={currentUsername}/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/entry" element={<Auth />} />
@@ -44,7 +45,7 @@ const App = () => {
       <Footer />
     </main>
     </ThemeContext.Provider>
-
+    </AuthContext.Provider>
 
   );
 };
