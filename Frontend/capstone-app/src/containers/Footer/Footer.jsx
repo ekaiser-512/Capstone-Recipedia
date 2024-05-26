@@ -2,7 +2,7 @@ import "./Footer.css";
 
 const Footer = () => {
     const listObjects = [
-        { href: "#", name: "LinkedIn", desc: "LinkedIn link" }
+        { href: "https://www.linkedin.com/in/emily-kaiser512/", name: "LinkedIn", desc: "LinkedIn link" }
     ];
 
     return (
@@ -12,11 +12,10 @@ const Footer = () => {
                     <div className="contact-info">
                         <h4>Contact</h4>
                         <p>Email: ekaiser@indeed.com</p>
-                        <p>Phone: Not your business, friend</p>
                     </div>
                     <div className="social-links">
                         {listObjects.map((item, index) => (
-                            <a key={index} href= https://www.linkedin.com/in/emily-kaiser512/ aria-label={item.desc}>{item.name}</a>
+                            <a key={index} href={item.href} aria-label={item.desc}>{item.name}</a>
                         ))}
                     </div>
                 </div>

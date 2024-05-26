@@ -24,10 +24,14 @@
     border-bottom: 1px solid whitesmoke;
 }
 
+.nav-link-container li:hover {
+    color: tomato;
+}
+
 .navbar-profile-signout {
     display: flex;
-    justify-content: space-between;
-    width: 30%;
+    align-items: center; /* Ensure items are vertically centered */
+    gap: 10px; /* Adjust the gap between the profile icon and the button */
 }
 
 .navbar-profile-signout strong {
