@@ -4,12 +4,14 @@ import org.example.capstonebackend.model.Auth;
 import org.example.capstonebackend.repository.IAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AuthService {
 
     private final IAuthRepository authRepository;

@@ -4,57 +4,63 @@ import Signup from "../../components/Auth/Signup";
 import Button from "../../components/Button/Button";
 import { postData } from "../../api/api"
 import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import './Auth.css'
 
-import {postData} from "../../api/api"
-
 const App = () => {
-const {currentUsername, setCurrentUsername} = useContext(AuthContext)
-const [isLogin, setIsLogin] = useState(true)
-const [isSetup, setIsSetup] = useState(true)
-const [errorMessage, setErrorMessage] = useState(null)
-const [loginFormData, setLoginFormData] = useState({
-    email: "",
-    password: "", 
 
-})
+    const navigate = useNavigate();
+    const {currentUserFirstName, setCurrentUserFirstName} = useContext(AuthContext)
+    const [isLogin, setIsLogin] = useState(true)
+    const [isSetup, setIsSetup] = useState(true)
+    const [errorMessage, setErrorMessage] = useState(null)
+    const [loginFormData, setLoginFormData] = useState({
+        email: "",
+        password: "", 
 
-const [signupFormData, setSignupFormData] = useState({
-    firstName: "",
-    lastName: "",
-    dateOfBirth: "",
-    email: "",
-    password: "" 
-})
+    })
 
-const handleLogin = async () => {
-    const response = await postData("users/login", loginFormData)
-    console.log(response);
-    if(response.hasError) {
-        setErrorMessage(response.error)
-    } else {
-        setCurrentUsername(response.data.username)
+    const [signupFormData, setSignupFormData] = useState({
+        firstName: "",
+        lastName: "",
+        dateOfBirth: "",
+        email: "",
+        password: "" 
+    })
+
+    const handleLogin = async () => {
+        const response = await postData("users/login", loginFormData)
+        console.log(response);
+        if(response.hasError) {
+            setErrorMessage(response.message)
+        } else {
+            setCurrentUserFirstName(response.data.firstName)
+            navigate("/home")
+        }
+    
     }
-}
 
-const handleSignup = async () => {
-    const response = await postData("users/signup", signupFormData)
-    console.log(response);
-    if(response.hasError) {
-        setErrorMessage(response.error)
-    } else {
-        setCurrentUsername(response.data.username)
+    const handleSignup = async () => {
+        const response = await postData("users/signup", signupFormData)
+        console.log(response);
+        if(response.hasError) {
+            setErrorMessage(response.message)
+        } else {
+            setCurrentUserFirstName(response.data.firstName)
+            setErrorMessage(null)
+            navigate("/home")
+        }
     }
-}
 
-const toggleAuthMode = () => {
-    setIsLogin(!isLogin)
-}
+    const toggleAuthMode = () => {
+        setIsLogin(!isLogin)
+        setErrorMessage(null)
+    }
     return (
         <section className="auth-container">
             <div>
                 {
-                errorMessage && <h4>{errorMessage}</h4>
+                errorMessage && <h4 className="error">{errorMessage}</h4>
                 }   
             </div>
         {isLogin ? (

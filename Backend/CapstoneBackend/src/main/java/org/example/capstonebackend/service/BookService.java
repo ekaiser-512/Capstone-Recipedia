@@ -6,12 +6,14 @@ import org.example.capstonebackend.repository.IBookRepository;
 import org.example.capstonebackend.repository.ICategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BookService {
 
     private final IBookRepository bookRepository;

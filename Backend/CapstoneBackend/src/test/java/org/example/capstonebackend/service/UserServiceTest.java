@@ -1,11 +1,9 @@
 package org.example.capstonebackend.service;
 
-import jakarta.inject.Inject;
-import org.example.capstonebackend.components.UserTestUtilities;
+import org.example.capstonebackend.DTO.UserUpdateDTO;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IUserRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,11 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static javax.management.Query.eq;
 import static org.example.capstonebackend.components.UserTestUtilities.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -30,41 +26,12 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    @Inject
-    private UserTestUtilities userTestUtilities;
-
-
-//CREATE
-    //create user
-        //happy path
-    @Test
-    public void testAddUser() throws Exception {
-        when(userRepository.save(eq(mockUser))).thenReturn(mockUser);
-
-        User result = userService.addUser((mockUser));
-
-        assertEquals(mockUser, result);
-        verify(userRepository).save(mockUser);
-    }
-
-        //sad path
-    @Test
-    public void testAddUser_AlreadyExists() throws Exception {
-        when(userRepository.save(any())).thenReturn(null);
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
-
-        assertThrows(Exception.class, () -> {
-            userService.addUser(mockUser);
-        });
-
-        verify(userRepository, times(0)).save(mockUser);
-    }
 
 //READ
     //get user by id
         //happy path
     @Test
-    public void testGetUserById() throws Exception {
+    public void testGetUserById() {
         when(userRepository.findById(anyInt())).thenReturn(Optional.of(mockUser));
 
         User result = userService.getUserById(mockUser.getUserId());
@@ -75,40 +42,44 @@ public class UserServiceTest {
 
         //sad path
     @Test
-    public void testGetUserById_UserNotFound() throws Exception {
+    public void testGetUserById_UserNotFound() {
         when(userRepository.findById(mockUser.getUserId())).thenReturn(Optional.empty());
 
-        assertThrows(Exception.class, () -> {
-            userService.getUserById(mockUser.getUserId());
-        });
+        assertThrows(Exception.class, () -> userService.getUserById(mockUser.getUserId()));
 
         verify(userRepository).findById(mockUser.getUserId());
     }
 
     //get user by email
     @Test
-    public void testGetUserByEmail() throws Exception {
-        //arrange
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+    public void testGetUserByEmail() {
+        String email = "test@example.com";
+        User user = new User();
+        user.setEmail(email);
 
-        //act
-        User result = userService.getUserByEmail(mockUser.getEmail());
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        //assert
-        assertEquals(mockUser, result);
-        verify(userRepository).findByEmail(anyString());
+        User foundUser = userService.getUserByEmail(email);
+
+        assertNotNull(foundUser);
+        assertEquals(email, foundUser.getEmail());
+
+        verify(userRepository, times(1)).findByEmail(email);
     }
 
         //sad path
     @Test
-    public void testGetUserByEmail_NotFound() throws Exception {
-        when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.empty());
+    public void testGetUserByEmail_NotFound() {
+        String email = "test@example.com";
 
-        assertThrows(Exception.class, () -> {
-            userService.getUserByEmail(mockUser.getEmail());
-        });
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        verify(userRepository).findByEmail(mockUser.getEmail());
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> userService.getUserByEmail(email));
+
+        assertEquals("User with email " + email + " not found", exception.getMessage());
+
+        verify(userRepository, times(1)).findByEmail(email);
     }
 
     //get all users
@@ -129,41 +100,70 @@ public class UserServiceTest {
     }
 
 //UPDATE
-    //update user
         //happy path
-    @Test
-    public void testUpdateUser() throws Exception {
-        when(userRepository.save(any(User.class))).thenReturn(mockUser);
-        when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
+@Test
+public void testUpdateUser() {
+    User existingUser = new User();
+    existingUser.setUserId(1);
+    existingUser.setEmail("oldemail@example.com");
+    existingUser.setFirstName("Old");
+    existingUser.setLastName("Name");
 
-        User updatedUser = userService.updateUser(1, mockUser);
+    when(userRepository.findByEmail(mockUser.getEmail())).thenReturn(Optional.of(existingUser));
+    when(userRepository.save(any(User.class))).thenReturn(existingUser);
 
-        assertNotNull(updatedUser);
-        assertEquals(mockUser, updatedUser);
-        verify(userRepository).findById(1);
-    }
+    User updatedUser = userService.updateUser(mockUser);
+
+    assertNotNull(updatedUser);
+    assertEquals(existingUser.getEmail(), updatedUser.getEmail());
+    assertEquals(existingUser.getFirstName(), updatedUser.getFirstName());
+    assertEquals(existingUser.getLastName(), updatedUser.getLastName());
+
+    verify(userRepository, times(1)).findByEmail(mockUser.getEmail());
+    verify(userRepository, times(1)).save(existingUser);
+}
+
 
         //sad path
     @Test
-    public void testUpdateUser_UserNotFound() throws Exception {
+    public void testUpdateUser_UserNotFound() {
         when(userRepository.findById(mockUser.getUserId())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(Exception.class, () -> {
-            userService.getUserById(mockUser.getUserId());
-        });
+        Exception exception = assertThrows(Exception.class,
+                () -> userService.getUserById(mockUser.getUserId()));
 
         assertEquals("User with id " + mockUser.getUserId() + " not found", exception.getMessage());
     }
 
 //DELETE
-    //delete user
         //happy path
+@Test
+public void testDeleteUserById() {
+    Integer userId = 1;
+    User user = new User();
+    user.setUserId(userId);
+
+    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+    assertDoesNotThrow(() -> userService.deleteUser(userId));
+
+    verify(userRepository, times(1)).findById(userId);
+    verify(userRepository, times(1)).delete(user);
+}
+
+    //sad path
     @Test
-    public void testDeleteUser() {
-        doNothing().when(userRepository).deleteById(anyInt());
+    public void testDeleteUserById_NotFound() {
+        Integer userId = 1;
 
-        userService.deleteUser(mockUser.getUserId());
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        verify(userRepository).deleteById(mockUser.getUserId());
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> userService.deleteUser(userId));
+
+        assertEquals("User with id " + userId + " not found", exception.getMessage());
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).delete(any(User.class));
     }
 }

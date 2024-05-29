@@ -2,47 +2,58 @@ package org.example.capstonebackend.service;
 
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IUserRepository;
+import org.example.capstonebackend.utils.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Transactional
 public class UserService {
-
-    private final IUserRepository userRepository;
+    @Autowired
+    IUserRepository userRepository;
 
     @Autowired
-    public UserService(IUserRepository userRepository) {
-        this.userRepository = userRepository;
+    ModelMapperUtil modelMapperUtil;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    public User registerUser(User newUser) throws Exception{
+        User existingUser = userRepository.findByEmail(newUser.getEmail()).orElse(null);
+        if(existingUser != null){
+            throw new Exception("user with email " + newUser.getEmail() + " already exists");
+        }
+        String rawPassword = newUser.getPassword();
+        String encodePassword = passwordEncoder.encode(rawPassword);
+
+        newUser.setPassword(encodePassword);
+        return userRepository.save(newUser);
     }
 
-//CREATE
-    //add user
-    public User addUser(User user) throws Exception {
-        // Check if a post with the same title already exists
-        Optional<User> userExists = userRepository.findByEmail(user.getEmail());
-
-        // If a post with the same title exists, throw an exception
-        if(userExists.isPresent()) {
-            throw new Exception("user with id " + user.getUserId() + " already exists");
+    public User loginUser(User user) {
+        User existingUser = userRepository.findByEmail(user.getEmail())
+                .orElseThrow( () -> new RuntimeException("User with email " + user.getEmail() + " not found"));
+        if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+            throw new RuntimeException("The provided password is incorrect");
         }
-        // If no post with the same title exists, save the new post and return it
-        return userRepository.save(user);
+        return existingUser;
     }
 
 //READ
     //get user by id
-    public User getUserById(Integer id) throws Exception {
+    public User getUserById(Integer id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new Exception("User with id " + id + " not found"));
+                .orElseThrow(() -> new RuntimeException("User with id " + id + " not found"));
     }
 
     //get user by email
-    public User getUserByEmail(String email) throws Exception {
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new Exception("User with email " + email + " not found"));
+                .orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
     }
 
     //get all users
@@ -51,23 +62,21 @@ public class UserService {
     }
 
 //UPDATE
-    //update user
-    public User updateUser(int id, User user) throws Exception {
-        User oldUser = userRepository.findById(id).orElse(null);
+    public User updateUser(User user) {
+        User existingUser = userRepository.findByEmail(user.getEmail())
+                .orElseThrow(() -> new RuntimeException("User with email " + user.getEmail() + " not found"));
 
-        if(oldUser == null) {
-            throw new Exception("User with id " + id + " not found");
-        }
-        oldUser.setFirstName(user.getFirstName());
-        oldUser.setLastName(user.getLastName());
-        oldUser.setDateOfBirth(user.getDateOfBirth());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
 
-        return userRepository.save(oldUser);
+        return userRepository.save(existingUser);
     }
 
 //DELETE
-    //delete user
-    public void deleteUser(int id) {
-        userRepository.deleteById(id);
+    public void deleteUser(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User with id " + id + " not found"));
+        userRepository.delete(user);
     }
 }

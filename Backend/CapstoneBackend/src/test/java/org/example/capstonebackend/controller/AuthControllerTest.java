@@ -3,11 +3,14 @@ package org.example.capstonebackend.controller;
 
 import org.example.capstonebackend.components.AuthTestUtilities;
 import org.example.capstonebackend.model.Auth;
+import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.service.AuthService;
+import org.example.capstonebackend.service.UserService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -19,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.example.capstonebackend.components.AuthTestUtilities.*;
 import static org.example.capstonebackend.components.AuthTestUtilities.authToJson;
 
+import static org.example.capstonebackend.components.UserTestUtilities.mockUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -29,6 +33,7 @@ import static org.hamcrest.core.Is.is;
 
 @Import({AuthController.class, AuthTestUtilities.class})
 @WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class AuthControllerTest {
 
     @Autowired
@@ -36,6 +41,9 @@ public class AuthControllerTest {
 
     @MockBean
     private AuthService authService;
+
+    @MockBean
+    private UserService userService;
 
     @InjectMocks
     private AuthController authController;
@@ -50,7 +58,7 @@ public class AuthControllerTest {
     @Test
     void testUserSignup() throws Exception {
         //arrange
-        when(authService.userSignup(any(Auth.class))).thenReturn(mockAuth);
+        when(userService.registerUser(any(User.class))).thenReturn(mockUser);
 
         //act
         ResultActions resultActions = mockMvc.perform(post("/users/signup")
@@ -59,14 +67,14 @@ public class AuthControllerTest {
         resultActions.andExpect(status().isOk());
 
         //assert
-        verify(authService).userSignup(any(Auth.class));
+        verify(userService).registerUser(any(User.class));
     }
 
         //sad path
     @Test
     void testAddAuth_UserExists() throws Exception {
         //arrange
-        when(authService.userSignup(any())).thenThrow(new Exception("user with email " + mockAuth.getEmail() + " already exists"));
+        when(userService.registerUser(any())).thenThrow(new Exception("user with email " + mockAuth.getEmail() + " already exists"));
 
         //act
         mockMvc.perform(post("/users/signup")
@@ -75,20 +83,20 @@ public class AuthControllerTest {
                 .andExpect(status().isBadRequest());
 
         //assert
-        verify(authService).userSignup(any());
+        verify(userService).registerUser(any());
 
     }
 
     @Test
     void testUserLogin() throws Exception {
-        when(authService.getAuthByEmail(mockAuth.getEmail())).thenReturn(mockAuth);
+        when(userService.loginUser(mockUser)).thenReturn(mockUser);
 
         mockMvc.perform(post("/users/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(authToJson(mockAuth)))
             .andExpect(status().isOk());
 
-        verify(authService).getAuthByEmail(anyString());
+        verify(userService).loginUser(any(User.class));
     }
 
 

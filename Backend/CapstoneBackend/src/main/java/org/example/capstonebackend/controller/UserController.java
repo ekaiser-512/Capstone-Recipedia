@@ -1,50 +1,41 @@
 package org.example.capstonebackend.controller;
 
 import org.apache.coyote.Response;
+import org.example.capstonebackend.DTO.CommonResponseDTO;
+import org.example.capstonebackend.DTO.UserUpdateDTO;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
     UserService userService;
 
-    @Autowired
-    IUserRepository userRepository;
 
 //CREATE
     //create user
-    @PostMapping("/users") //todo why is DOB null?
-    public ResponseEntity<User> addUser (@RequestBody User user) throws Exception {
-        try {
-            //Trying to add post
-            User addedUser = userService.addUser(user);
-            //if successful, return OK (200) response with the added post
-            return ResponseEntity.ok(addedUser);
-        } catch (Exception e) {
-            // If an exception occurs during adding the post, return Bad Request (400) response
-            return ResponseEntity.badRequest().build();
-        }
-    }
+    //this lives under the auth controller
 
 //READ
     //get user by id
-    @GetMapping("users/{id}")
+
+    @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-            try {
-                User user = userService.getUserById(id);
-                return ResponseEntity.ok(user);
-            } catch (Exception e) {
-                return ResponseEntity.notFound().build();
-            }
+        try {
+            User user = userService.getUserById(id);
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
+        }
     }
 
     //get user by email
@@ -53,37 +44,44 @@ public class UserController {
         try {
             User user = userService.getUserByEmail(email);
             return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
         }
     }
 
     //get all users
     @GetMapping("/users")
-    public List<User> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
-        return users;
+        return ResponseEntity.ok(users);
     }
 
 //UPDATE
     //update User
     @PutMapping("/users/{id}")
-    public ResponseEntity<?> updatedUser(@PathVariable int id, @RequestBody User user) throws Exception {
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
         try {
-            User updatedUser = userService.updateUser(id, user);
-            return ResponseEntity.ok(updatedUser);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            User updatedUser = userService.updateUser(user);
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(false).data(updatedUser).message("User updated successfully").status(HttpStatus.OK).build();
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(true).message("unable to update user, please try again and fill out all fields").status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
 
 //DELETE
     //delete user
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Integer id) {
+@DeleteMapping("users/{id}")
+public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
+    try {
         userService.deleteUser(id);
+        return ResponseEntity.ok("User with id " + id + " has been deleted.");
+    } catch (RuntimeException e) {
+        return ResponseEntity.status(404).body(e.getMessage());
     }
+}
 
 
 }

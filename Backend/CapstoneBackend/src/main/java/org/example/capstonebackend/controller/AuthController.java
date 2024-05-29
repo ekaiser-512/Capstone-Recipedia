@@ -1,63 +1,62 @@
 package org.example.capstonebackend.controller;
 
-import org.apache.coyote.Response;
+import org.example.capstonebackend.DTO.CommonResponseDTO;
+import org.example.capstonebackend.DTO.UserLoginDTO;
+
 import org.example.capstonebackend.model.Auth;
+import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.service.AuthService;
+import org.example.capstonebackend.service.UserService;
+import org.example.capstonebackend.utils.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.List;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     //holds user verification concerns
-
     private final AuthService authService;
 
+    private final UserService userService;
+
     @Autowired
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, UserService userService) {
         this.authService = authService;
+        this.userService = userService;
     }
 
 //CREATE - we want to be able to prevent duplication of email address usage.
 
-    //todo check if the user exists and if so sends back a status of ok as well as the username.
+//    //todo check if the user exists and if so sends back a status of ok as well as the username.
+
     @PostMapping("/users/signup")
-    public ResponseEntity<Auth> userSignup(@RequestBody Auth auth) throws Exception {
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
-            //trying to add auth
-            Auth addedAuth = authService.userSignup(auth);
-            //if successful, return OK(200) response with the added auth
-            return ResponseEntity.ok(addedAuth);
+            User newUser = userService.registerUser(user);
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(false).data(newUser).message("User created successfully").status(HttpStatus.OK).build();
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            //if an exception occurs during adding the auth, return Bad Request (400) response
-            return ResponseEntity.badRequest().build();
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(true).message("User exists or form is missing information").status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
     @PostMapping("/users/login")
-    public ResponseEntity<?> userLogin(@RequestBody Auth auth) {
+    public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
-            Auth existingAuth = authService.getAuthByEmail(auth.getEmail());
-            if (Objects.equals(existingAuth.getPassword(), auth.getPassword()) &&
-                    Objects.equals(existingAuth.getEmail(), auth.getEmail())) {
-                return ResponseEntity.ok(true);
-            }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-
+            User existingUser = userService.loginUser(user);
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(false).data(existingUser).message("User authenticated successfully").status(HttpStatus.OK).build();
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(true).message("Email or password incorrect, please try again").status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.badRequest().body(response);
         }
-        //get email out of the incoming auth object (Request body)
-        //look up auth object from auth service given that email
-        //compare password from request body to auth object we just looked up
-        //if == ok, if !== unauthorized
+
     }
 
 //READ

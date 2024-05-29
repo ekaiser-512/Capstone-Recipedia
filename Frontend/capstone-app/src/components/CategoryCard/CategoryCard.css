@@ -1,0 +1,11 @@
+.category-card {
+    background-color: whitesmoke;
+    color: #333;
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .category-card img {
+    width: 100%;
+    height: auto;
+  }

@@ -1,24 +1,18 @@
-package org.example.capstonebackend.model;
+package org.example.capstonebackend.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Entity
-@Table(name = "\"User\"", uniqueConstraints= {@UniqueConstraint(columnNames = "email")})
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId;
+@NoArgsConstructor
+public class UserRegistrationDTO {
 
     @NotBlank(message = "User first name is mandatory")
     @Column(name = "firstName", nullable = false, unique = false)
@@ -37,16 +31,8 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-//    @JsonIgnore
+    @JsonIgnore
     @Size(min = 8, message="Password must be at least 8 characters long")
     @Column(name="password", nullable = false, length = 255)
     private String password;
-
-//    @Embedded
-
-    //Creating 1:1 relationship between User and Book
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_id")
-    private Book book;
-
 }

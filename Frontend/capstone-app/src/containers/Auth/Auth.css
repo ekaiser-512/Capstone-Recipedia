@@ -6,3 +6,8 @@
     margin-top: 20px;
     
 }
+
+.error {
+    color: tomato;
+    font-size: 20px;
+}

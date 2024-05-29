@@ -2,10 +2,9 @@ package org.example.capstonebackend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Generated;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,11 +12,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotBlank(message="Title is mandatory")
+    @Size(min=3, max = 50, message="Title must be between 3 and 50 characters")
+    @Column(name="title", nullable = false, length = 50, unique = true)
     private String title;
 
     //Creating 1:N relationship between Book and Category

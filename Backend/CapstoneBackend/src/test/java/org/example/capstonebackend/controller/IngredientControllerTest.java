@@ -2,11 +2,11 @@ package org.example.capstonebackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.capstonebackend.model.Ingredient;
-import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IIngredientRepository;
 import org.example.capstonebackend.service.IngredientService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -27,16 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(IngredientController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class IngredientControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private IIngredientRepository ingredientRepository;
+    private IngredientService ingredientService;
 
     @MockBean
-    private IngredientService ingredientService;
+    private IIngredientRepository ingredientRepository;
 
 //CREATE
 
@@ -180,7 +181,6 @@ public class IngredientControllerTest {
     }
 
 //UPDATE
-    //update ingredient
         //happy path
     @Test
     public void testUpdateIngredient() throws Exception {
@@ -217,7 +217,6 @@ public class IngredientControllerTest {
     }
 
 //DELETE
-    //delete ingredient
         //happy path
     @Test public void testDeleteIngredient() throws Exception {
         int id = 1;

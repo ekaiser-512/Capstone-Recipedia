@@ -1,130 +1,107 @@
 package org.example.capstonebackend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.capstonebackend.DTO.UserUpdateDTO;
 import org.example.capstonebackend.model.User;
-import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.example.capstonebackend.components.UserTestUtilities.*;
-import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private IUserRepository userRepository;
 
     @MockBean
     private UserService userService;
 
 
+    private ObjectMapper objectMapper;
 
-
-//CREATE
-    //create user
-        //happy path
-    @Test
-    public void testAddUser() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String userToJson = objectMapper.writeValueAsString(mockUser);
-
-        when(userService.addUser(any(User.class))).thenReturn(mockUser);
-
-        ResultActions resultActions = mockMvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userToJson));
-        resultActions.andExpect(status().isOk());
-        compareJsonOutput(resultActions, mockUser);
-
-        verify(userService).addUser(any(User.class));
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+//        mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
+        objectMapper = new ObjectMapper();
     }
 
-        //sad path
-    @Test
-    public void testAddUser_UserExists() throws Exception {
-        when(userService.addUser(any())).thenThrow(new Exception("User with id " + mockUser.getUserId() + " already exists"));
-
-        mockMvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userToJson(mockUser)))
-                .andExpect(status().isBadRequest());
-
-        verify(userService).addUser(any());
-    }
 
 //READ
     //get user by id
         //happy path
-    @Test
-    public void testGetUserById() throws Exception {
-        int id = 1;
-        when(userService.getUserById(id)).thenReturn(mockUser);
+@Test
+public void testGetUserById() throws Exception {
+    Integer userId = 1;
+    User user = new User();
+    user.setUserId(userId);
+    user.setEmail("test@example.com");
 
-        mockMvc.perform(get("/users/{id}", id))
-                .andExpect(status().isOk());
+    when(userService.getUserById(userId)).thenReturn(user);
 
-        verify(userService).getUserById(id);
-    }
+    mockMvc.perform(get("/users/{id}", userId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.userId").value(userId))
+            .andExpect(jsonPath("$.email").value("test@example.com"));
+}
 
         //sad path
     @Test
     public void testGetUserById_IdNotFound() throws Exception {
-        when(userService.getUserById(mockUser.getUserId())).thenThrow(new Exception("User with id " + mockUser.getUserId() + " not found"));
+        Integer userId = 1;
 
-        mockMvc.perform(get("/users/{id}", mockUser.getUserId())
-                .contentType(MediaType.APPLICATION_JSON))
+        when(userService.getUserById(userId)).thenThrow(new RuntimeException("User with id " + userId + " not found"));
+
+        mockMvc.perform(get("/users/{id}", userId))
                 .andExpect(status().isNotFound());
 
-        verify(userService).getUserById(mockUser.getUserId());
+        verify(userService).getUserById(any());
     }
 
     //get user by email
         //happy path
     @Test
     public void testGetUserByEmail() throws Exception {
+//        String email = "test@example.com";
+//        User user = new User();
+//        user.setEmail(email);
 
-        when(userService.getUserByEmail(anyString())).thenReturn(mockUser);
+        when(userService.getUserByEmail(mockUser.getEmail())).thenReturn(mockUser);
 
-        ResultActions resultActions = mockMvc.perform(get("/users/email/{email}", mockUser.getEmail()));
-
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is(mockUser.getEmail())))
-                .andExpect(jsonPath("$.firstName", is("Joe")))
-                .andExpect(jsonPath("$.lastName", is("Doe")));
-
-        verify(userService).getUserByEmail(anyString());
+        mockMvc.perform(get("/users/email/{email}", mockUser.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value(mockUser.getEmail()));
     }
         //sad path
         @Test
         public void testGetUserByEmail_UserNotFound() throws Exception {
+            String email = "test@example.com";
 
-            String badEmail = "notfound@gmail.com";
-            when(userService.getUserByEmail(badEmail)).thenThrow(new Exception("User with email " + badEmail + " does not exist"));
+            when(userService.getUserByEmail(email)).thenThrow(new RuntimeException("User with email " + email + " not found"));
 
-            ResultActions resultActions = mockMvc.perform(get("/users/email/{email}", badEmail)
-                    .contentType(MediaType.APPLICATION_JSON));
-            resultActions.andExpect(status().isNotFound());
+            mockMvc.perform(get("/users/email/{email}", email))
+                    .andExpect(status().isNotFound());
 
-            verify(userService).getUserByEmail(badEmail);
+            verify(userService).getUserByEmail(any());
         }
 
     //get all users
@@ -151,59 +128,63 @@ public class UserControllerTest {
     //update user
         //happy path
     @Test
-    public void testUpdateUser() throws Exception {
-        int id = 1;
-
+    public void testUpdateUser_HappyPath() throws Exception {
         User updatedUser = new User();
         updatedUser.setUserId(1);
-        updatedUser.setFirstName("Updated Joe");
-        updatedUser.setLastName("Doe");
-        updatedUser.setDateOfBirth("02/01/1992");
-        updatedUser.setEmail("updatedJoey@test.com");
-        updatedUser.setPassword("updatedPassword");
+        updatedUser.setEmail("newemail@example.com");
+        updatedUser.setFirstName("New");
+        updatedUser.setLastName("Name");
 
-        when(userService.updateUser(eq(id), any(User.class))).thenReturn(updatedUser);
+        when(userService.updateUser(any(User.class))).thenReturn(updatedUser);
 
-        ResultActions resultActions = mockMvc.perform(put("/users/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userToJson(mockUser)));
+        mockMvc.perform(put("/users/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(mockUser)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email").value("newemail@example.com"))
+                .andExpect(jsonPath("$.data.firstName").value("New"))
+                .andExpect(jsonPath("$.data.lastName").value("Name"));
 
-        resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", is("Updated Joe")))
-                .andExpect(jsonPath("$.lastName", is("Doe")))
-                .andExpect(jsonPath("$.dateOfBirth", is("02/01/1992")))
-                .andExpect(jsonPath("$.email", is("updatedJoey@test.com")))
-                .andExpect(jsonPath("$.password", is("updatedPassword")));
-
-        verify(userService).updateUser(eq(id), any(User.class));
+        verify(userService).updateUser(any());
     }
+
 
         //sad path
-    @Test
-    public void TestUpdateUser_IdDoesNotExist() throws Exception {
-        when(userService.updateUser(anyInt(), any(User.class))).thenThrow(new Exception("User with id " + mockUser.getUserId() + " not found"));
+        @Test
+        public void testUpdateUser_NotFound() throws Exception {
+            when(userService.updateUser(any(User.class)))
+                    .thenThrow(new RuntimeException("User with email " + mockUser.getEmail() + " not found"));
 
-        mockMvc.perform(put("/users/{id}", mockUser.getUserId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(userToJson(mockUser)))
-                .andExpect(status().isNotFound());
+            mockMvc.perform(put("/users/{id}", 55)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(mockUser)))
+                    .andExpect(status().isBadRequest());
 
-        verify(userService).updateUser(any(Integer.class), any(User.class));
-    }
-
+            verify(userService).updateUser(any());
+        }
 
 //DELETE
     //delete user
+@Test
+public void testDeleteUserById() throws Exception {
+    Integer userId = 1;
+
+    doNothing().when(userService).deleteUser(userId);
+
+    mockMvc.perform(delete("/users/{id}", userId))
+            .andExpect(status().isOk())
+            .andExpect(content().string("User with id " + userId + " has been deleted."));
+}
+
     @Test
-    public void testDeleteUser() throws Exception {
-        int id = 1;
+    public void testDeleteUserById_SadPath() throws Exception {
+        Integer userId = 1;
+        String errorMessage = "User with id " + userId + " not found";
 
-        doNothing().when(userService).deleteUser(anyInt());
+        doThrow(new RuntimeException(errorMessage)).when(userService).deleteUser(userId);
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/users/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON));
-        resultActions.andExpect(status().isOk());
-
-        verify(userService).deleteUser(id);
+        mockMvc.perform(delete("/users/{id}", userId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(errorMessage));
     }
 }
