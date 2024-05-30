@@ -1,15 +1,9 @@
 /* Footer styles */
 
-footer {
-  background-color: #333;
-  color: whitesmoke;
-  padding: 1rem;
-  text-align: center;
-}
-
 .footer-content {
   display: flex;
   justify-content: center;
+  align-content: center;
   margin-bottom: 1rem;
   flex-wrap: wrap;
 }
@@ -44,14 +38,15 @@ footer {
   gap: 1rem;
 }
 
-.social-links a {
-  color: whitesmoke;
+.Footer .social-links a {
+  /* color: whitesmoke; */
+  color: #3D405B;
   text-decoration: none;
   transition: color 0.3s;
 }
 
-.social-links a:hover {
-  color: #ff6347; /* Tomato color for hover effect */
+.Footer .social-links a:hover {
+  color: #E07A5F;
 }
 
 .footer-bottom {

@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { AuthContext } from "../../contexts/AuthContext"
 import { ThemeContext } from "../../contexts/Theme"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Button from "../Button/Button"
 import Dark from '../../components/Dark/Dark'
 import "./NavBar.css"
@@ -37,18 +37,23 @@ const NavBar = () => {
         event.preventDefault();
         navigate("/profile");
     };
-    
 
     return (
-        <nav className="navbar">
-            <div className="navbar-appname">Recipedia</div>
-            {
-                currentUserFirstName && <>
-                <ul className="nav-link-container">
-                <Button handleClick={onHomeButtonClick} text="Home" style="button-light"/>
-                <Button handleClick={onCreateRecipeButtonClick} text="Create Recipe" style="button-light"/>
-                <Button handleClick={onSearchButtonClick} text="Search" style="button-light"/>
-            </ul>
+    <nav className="navbar navbar-expand-lg bg-body-none">
+        <div className="container-fluid">
+            {currentUserFirstName ? ( 
+            <Link className="navbar-appname navbar-brand" to="/home">Recipedia</Link>
+    ) : (
+      <span className="navbar-appname navbar-brand">Recipedia</span>
+    )}
+   
+         {
+         currentUserFirstName && <>
+     
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon"></span></button>
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul className="nav-link-container navbar-nav me-auto mb-2 mb-lg-0"><Button handleClick={onHomeButtonClick} text="Home" style="button-light"/><Button handleClick={onCreateRecipeButtonClick} text="Create Recipe" style="button-light"/><Button handleClick={onSearchButtonClick} text="Search" style="button-light"/>
+                </ul>
             <div className="navbar-profile-signout">
                 <strong onClick={onProfileClick} style={{ cursor: 'pointer' }}>
                     {currentUserFirstName[0].toUpperCase()}
@@ -58,9 +63,12 @@ const NavBar = () => {
             <div className="toggle-container">
                 <Dark className={'theme'} onChange={setTheme}/>
                 <label>Dark Mode</label>
-            </div></>
-            }
-
+            </div>
+            </div>
+            </>
+         
+            } 
+            </div>
         </nav>
     )
 }

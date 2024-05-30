@@ -14,6 +14,7 @@ import "./App.css";
 
 const App = () => {
   const[currentUserFirstName, setCurrentUserFirstName] = useState(null)
+  const[currentBook, setCurrentBook] = useState(null)
   const[theme, setTheme] = useState("light")
 
   useEffect(() => {
@@ -34,11 +35,11 @@ const App = () => {
   const updateUser = (updatedData) => {
     // Logic to update user profile
     setCurrentUserFirstName(updatedData.firstName);
-    // Update other user data as needed
+    // Update other user data as needed bg-[F4F1DE]
   };
 
   return (
-    <AuthContext.Provider value={{currentUserFirstName, setCurrentUserFirstName}}>
+    <AuthContext.Provider value={{currentUserFirstName, setCurrentUserFirstName, currentBook, setCurrentBook}}>
     <ThemeContext.Provider value ={{theme, setTheme: toggleTheme}}>
     <main className={theme}>
       <Header/>

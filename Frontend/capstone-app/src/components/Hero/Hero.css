@@ -1,18 +1,4 @@
-.auth-container {
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-    
-}
-
-.error {
-    color:#E07A5F;
-    font-size: 20px;
-}
-
-.Auth .button {
+.Hero .button {
     background-color: #F2CC8F;
     border-radius: 15px;
     color: #3D405B;
@@ -24,7 +10,7 @@
     height: auto;
   }
 
-  .Auth .button:hover {
+.Hero .button:hover {
     box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
   }
   

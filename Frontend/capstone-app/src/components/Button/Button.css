@@ -1,12 +1,22 @@
 /* Button.css */
 :root {
-    --button-bg-light: whitesmoke;
+    /* --button-bg-light: whitesmoke; */
     --button-text-light: #333;
     --button-bg-dark: #333;
     --button-text-dark: whitesmoke;
   }
   
   .button {
+    /* width: 90px;
+    height: 50px; */
+    border: none;
+    margin: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .hero .button {
     width: 90px;
     height: 50px;
     border: none;
@@ -14,6 +24,28 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
+    background-color: #F2CC8F;
+    color: #3D405B;
+  }
+
+  .Home .button {
+    background-color: #F2CC8F;
+    border-radius: 15px;
+    color: #3D405B;
+    list-style: none;
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    width: auto;
+    height: auto;
+  }
+
+  .Home .button:hover {
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .Auth .button {
+    background-color: red;
   }
   
   .button-light {

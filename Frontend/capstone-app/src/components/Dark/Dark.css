@@ -22,7 +22,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: whitesmoke;
+  background-color: #FFF4EC;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -34,7 +34,7 @@
   width: 20px;
   left: 4px;
   bottom: 4px;
-  background-color: #333;
+  background-color: #3D405B;
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -66,5 +66,5 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   gap: 10px; /* Space between the switch and the label */
-  color: whitesmoke; /* Ensure the label color matches the navbar text color */
+  color: #3D405B; /* Ensure the label color matches the navbar text color */
 }

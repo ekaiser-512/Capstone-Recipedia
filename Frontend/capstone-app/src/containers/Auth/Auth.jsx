@@ -7,10 +7,10 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import './Auth.css'
 
-const App = () => {
+const Auth = () => {
 
     const navigate = useNavigate();
-    const {currentUserFirstName, setCurrentUserFirstName} = useContext(AuthContext)
+    const {currentUserFirstName, setCurrentUserFirstName, currentBook, setCurrentBook} = useContext(AuthContext)
     const [isLogin, setIsLogin] = useState(true)
     const [isSetup, setIsSetup] = useState(true)
     const [errorMessage, setErrorMessage] = useState(null)
@@ -30,11 +30,12 @@ const App = () => {
 
     const handleLogin = async () => {
         const response = await postData("users/login", loginFormData)
-        console.log(response);
+        console.log("login: response", response);
         if(response.hasError) {
             setErrorMessage(response.message)
         } else {
             setCurrentUserFirstName(response.data.firstName)
+            setCurrentBook(response.data.book)
             navigate("/home")
         }
     
@@ -57,6 +58,7 @@ const App = () => {
         setErrorMessage(null)
     }
     return (
+        <div className="Auth">
         <section className="auth-container">
             <div>
                 {
@@ -81,6 +83,7 @@ const App = () => {
         text={isLogin ? "Go to Sign up" : "Go to Login"} 
         style="button-dark" />
         </section>
+    </div>
     )
 }
-export default App;
+export default Auth;
