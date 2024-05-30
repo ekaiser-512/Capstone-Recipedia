@@ -6,7 +6,7 @@ const Footer = () => {
     ];
 
     return (
-        <footer id="contact">
+        <footer id="contact" className="Footer">
             <div className="footer-content">
                 <div className="footer-section contact-socials">
                     <div className="contact-info">

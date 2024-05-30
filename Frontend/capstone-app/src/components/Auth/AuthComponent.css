@@ -36,3 +36,19 @@ margin-bottom: 30px;
 .common-form button {
     align-self: center;
 }
+
+.Auth .button {
+    background-color: #F2CC8F;
+    border-radius: 15px;
+    color: #3D405B;
+    list-style: none;
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    width: auto;
+    height: auto;
+  }
+
+  .Auth .button:hover {
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+  }

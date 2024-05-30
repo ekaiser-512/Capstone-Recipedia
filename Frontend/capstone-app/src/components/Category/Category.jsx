@@ -1,5 +1,6 @@
 import CategoryCard from "../CategoryCard/CategoryCard";
 import Button from "../Button/Button";
+import "./Category.css";
 
 const Category = () => {
 
@@ -8,9 +9,8 @@ const Category = () => {
     ]
 
     return (
-        <section classname = "categories" id = "categories">
+        <section className = "categories" id = "categories">
             <h2>Recipe Categories</h2>
-            <Button style="button-light">Add Category to your book</Button>
             <div className = "category-grid">
                 {categoryCardData.map((category, index) => {
                     return (

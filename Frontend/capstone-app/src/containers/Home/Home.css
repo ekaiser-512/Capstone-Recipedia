@@ -1,12 +1,16 @@
-main {
+/* main {
     padding: 2rem;
-  }
+  } */
   
   .hero {
-    background-color: #494949;
-    color: whitesmoke;
+    color: #3D405B;
     text-align: center;
     padding: 4rem 2rem;
+  }
+
+  h2 {
+    margin: 2rem auto;
+    text-align: center;
   }
   
   .hero-content h1 {
@@ -17,6 +21,11 @@ main {
   .hero-content p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
+  }
+
+  .book-button {
+    background-color: #F2CC8F;
+    color: #3D405B;
   }
    
   /* .hero-content button {
@@ -32,3 +41,5 @@ main {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 2rem;
   }
+
+

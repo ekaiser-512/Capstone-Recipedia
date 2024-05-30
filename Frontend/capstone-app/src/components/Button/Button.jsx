@@ -5,7 +5,7 @@ const Button = ({ text, handleClick, theme }) => {
 
   return (
     <button onClick={handleClick} className={`button ${buttonClass}`}>
-      {text}
+      <li className="nav-item">{text}</li>
     </button>
   );
 };
