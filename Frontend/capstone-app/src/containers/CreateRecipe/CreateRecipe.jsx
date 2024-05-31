@@ -5,6 +5,7 @@ import { getData } from '../../api/api';
 import { postData } from '../../api/api';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
+import "./CreateRecipe.css";
 
 const CreateRecipe = ({submitRecipe, }) => {
 
@@ -99,45 +100,39 @@ const CreateRecipe = ({submitRecipe, }) => {
     }
 
     return (
-        <>
+        <div className="CreateRecipe">
         <h2>Create a New Recipe</h2>
         <div className="recipe-form">
-            <Input label="Name: " type="text" name="name" required onChange={handleChange} />
-            <Input label="Author: " type="text" name="recipeAuthor" required onChange={handleChange} />
-            <label htmlFor="category">Category: </label>
-                <select
-                id="category"
-                name="category"
-                value={recipeFormData.category}
-                onChange={handleChange}
-                required
-                >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                    {category.title}
-                    </option>
-                ))}
-                </select>
+        <Input label="Name: " type="text" name="name" required onChange={handleChange} />
+        <Input label="Author: " type="text" name="recipeAuthor" required onChange={handleChange} />
+        <label htmlFor="category">Category: </label>
+        <select 
+        id="category"
+         name="category"
+         value={recipeFormData.category}
+         onChange={handleChange}
+         required >
+         <option value="">Select a category</option>{categories.map((category) => (
+            <option key={category.id} value={category.id}>
+            {category.title}
+            </option>
+            ))}
+            </select>
             <div>
-                <h4>Ingredients</h4>
-                <ul>
-                    {ingredients.map((ingredient, index) => {
-                        <li key={index}>{ingredient}</li>
-                    })}
-                </ul>
-                <h3>{currentIngredient}</h3>
-                <Input label="Ingredient: " type="text" name="ingredient" value={currentIngredient} required onChange={handleIngredientChange}/>
-                <Button handleClick={onAddIngredientButtonClick} text="Add Ingredient" style="button-light" />
+            <h4>Ingredients</h4>
+            <ul>
+            {ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+                        ))}
+                        </ul>
+                        <Input label="Ingredient: " type="text" name="ingredient" value={currentIngredient} required onChange={handleIngredientChange} />
+                    <Button handleClick={onAddIngredientButtonClick} text="Add Ingredient" style="button-light" />
+                </div>
+                <Input label="Directions: " type="text" name="recipeDescription" required onChange={handleChange} />
             </div>
-            <Input label="Directions: " type="text" name="recipeDescription" required onChange={handleChange} />
+            <Button handleClick={onSubmitButtonClick} text="Submit your Recipe" style="button-light" />
         </div>
-
-
-
-        <Button handleClick={onSubmitButtonClick} text = "Submit your Recipe" style="button-light" />
-        </>
-    )
+    );
 }
 
 export default CreateRecipe;

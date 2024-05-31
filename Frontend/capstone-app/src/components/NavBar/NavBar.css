@@ -7,6 +7,12 @@
     font-size: 12px;
 }
 
+.navbar label {
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+}
+
 .navbar li {
     list-style: none;
 }

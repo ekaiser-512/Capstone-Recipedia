@@ -1,6 +1,4 @@
-
 import { useNavigate } from 'react-router-dom';
-
 import "./CategoryCard.css"
 
 const CategoryCard = ({ image, alt, categoryTitle, categoryId }) => {

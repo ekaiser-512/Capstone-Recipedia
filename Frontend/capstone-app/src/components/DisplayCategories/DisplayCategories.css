@@ -1,4 +1,4 @@
-/* Category.css */
+/* DisplayCategories.css */
 
 /* General styles */
 body {
@@ -10,15 +10,15 @@ body {
   }
   
   /* Categories section */
-  .categories {
+  .categories-section {
     padding: 2rem;
     text-align: center;
   }
   
-  .categories h2 {
+  .categories-section h2 {
     font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #333;
+    margin: 2rem auto;
+    border-bottom: 1px solid #333;
     padding-bottom: 0.5rem;
     color: #3D405B;
   }
@@ -31,33 +31,23 @@ body {
     padding: 2rem;
   }
   
-  /* Recipe card */
-  .recipe-card {
-    background-color: #fff;
-    border: 1px solid #3333339d;
-    border-radius: 10px;
-    box-shadow: 2px 2px 20px #333;
-    padding: 1.5rem;
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+  /* Category form */
+  .category-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
   }
   
-  .recipe-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
-  }
-  
-  .recipe-card h3 {
-    font-size: 1.5rem;
+  .category-form input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
     margin-bottom: 1rem;
+    width: 300px;
   }
   
-  .recipe-card p {
-    font-size: 1rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .recipe-card button {
+  .category-form button {
     background-color: #F2CC8F;
     color: #3D405B;
     padding: 0.5rem 1rem;
@@ -67,7 +57,7 @@ body {
     transition: box-shadow 0.3s;
   }
   
-  .recipe-card button:hover {
+  .category-form button:hover {
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
   }
   

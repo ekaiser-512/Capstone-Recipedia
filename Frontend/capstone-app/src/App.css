@@ -14,8 +14,16 @@ body {
 }
 
 main {
+  /* flex: 1; */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
   flex: 1;
 }
+
 
 body.light {
   background-color: #fff4ec;
@@ -48,9 +56,9 @@ footer {
   background-color: #81B29A;
   padding: 1rem;
   text-align: center;
-  height: auto;
+  /* height: auto;
   position: absolute;
-  bottom: 0;
+  bottom: 0; */
 }
 
 
@@ -84,10 +92,10 @@ footer {
     text-align: left;
   }
 
-  footer {
+  /* footer {
     margin-top: auto;
     width: 100%;
     position: fixed;
     bottom: 0;
-  }
+  } */
 }

@@ -92,7 +92,7 @@ const Home = () => {
                 
             currentUser.book == null ? (
                 <>
-                    <Input label="Title: " type="text" name="title" required onChange={handleBookForm} />
+                    <Input label="Book Title: " type="text" name="title" required onChange={handleBookForm} />
                     <Button handleClick={onCreateBookButton} text = "Create a Book" style="button-light" />
                 </>
             ) : (

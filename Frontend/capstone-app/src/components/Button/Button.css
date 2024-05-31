@@ -14,6 +14,7 @@
     font-weight: 700;
     font-size: 15px;
     cursor: pointer;
+    list-style: none;
   }
 
   .hero .button {
@@ -45,7 +46,20 @@
   }
 
   .Auth .button {
-    background-color: red;
+    list-style: none;
+  }
+
+  .CreateRecipe .button {
+    background-color: #F2CC8F;
+    border-radius: 15px;
+    color: #3D405B;
+    list-style: none;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 40px;
+    padding: 10px 20px;
+    width: auto;
+    height: auto;
   }
   
   .button-light {
@@ -56,4 +70,10 @@
   .button-dark {
     background-color: var(--button-bg-dark);
     color: var(--button-text-dark);
+  }
+
+  @media (min-width: 640px) {
+    .CreateRecipe .button {
+    margin: 10px auto;
+  }
   }

@@ -1,0 +1,96 @@
+/* SearchPage.css */
+
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #3D405B;
+    margin: 0;
+    padding: 0;
+}
+
+/* Search form container */
+.search-form {
+    max-width: 300px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 2px 4px 10px #33333363;
+    text-align: center;
+}
+
+.SearchPage h1 {
+    font-size: 30px;
+    margin-bottom: 1.5rem;
+    color: #3D405B;
+    padding: 30px 0;
+}
+
+.search-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.search-form input,
+.search-form button {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.search-form button {
+    background-color: #F2CC8F;
+    color: #3D405B;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+
+.search-form button:hover {
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.search-form ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.search-form li {
+    margin-bottom: 0.5rem;
+}
+
+/* Error message */
+.error {
+    color: #E07A5F;
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 640px) {
+    .SearchPage h1 {
+        font-size: 40px;
+        margin-bottom: 1.5rem;
+        color: #3D405B;
+        padding: 30px 0;
+    }
+
+    .search-form {
+        max-width: 600px;
+        margin: 1rem auto;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 2px 4px 10px #33333363;
+        text-align: center;
+    }
+
+    .search-form input {
+        margin: auto 0;
+    }
+}

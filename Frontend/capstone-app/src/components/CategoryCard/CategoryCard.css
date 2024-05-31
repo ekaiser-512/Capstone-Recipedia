@@ -1,8 +1,11 @@
 .category-card {
-    background-color: whitesmoke;
+    background-color: whitesmoke !important;
     color: #333;
     padding: 1rem;
     text-align: center;
+    border: none !important;
+    box-shadow: 2px 4px 10px #33333363 !important;
+   
   }
   
   .category-card img {

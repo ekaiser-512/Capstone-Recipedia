@@ -43,6 +43,7 @@ const App = () => {
     <ThemeContext.Provider value ={{theme, setTheme: toggleTheme}}>
     <main className={theme}>
       <Header/>
+      <div className="content">
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<Auth />} />
@@ -51,6 +52,7 @@ const App = () => {
         <Route path="/profile" element={<ProfileContainer />} />
         <Route path="/categories/:categoryId" element={<Category />} />
       </Routes>
+      </div>
       <Footer />
     </main>
     </ThemeContext.Provider>

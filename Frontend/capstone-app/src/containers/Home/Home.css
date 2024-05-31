@@ -1,45 +1,96 @@
-/* main {
-    padding: 2rem;
-  } */
-  
-  .hero {
-    color: #3D405B;
-    text-align: center;
-    padding: 4rem 2rem;
-  }
+/* Home.css */
 
-  h2 {
-    margin: 2rem auto;
-    text-align: center;
-  }
-  
-  .hero-content h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-  }
-  
-  .hero-content p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-  }
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #3D405B;
+  margin: 0;
+  padding: 0;
+}
 
-  .book-button {
-    background-color: #F2CC8F;
-    color: #3D405B;
-  }
-   
-  /* .hero-content button {
-    background-color: salmon;
-    color: #fff;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    cursor: pointer;
-  } */
-  
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 2rem;
-  }
+/* Hero section */
+.hero {
+  text-align: center;
+  padding: 4rem 2rem;
+}
 
+.hero-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
 
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.book-button {
+  background-color: #F2CC8F;
+  color: #3D405B;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+}
+
+.book-button:hover {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Project grid */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 2rem;
+  padding: 2rem;
+}
+
+/* Category card */
+.category-card {
+  background-color: #fff;
+  border: 1px solid #3333339d;
+  border-radius: 10px;
+  box-shadow: 2px 2px 20px #333;
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.category-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.category-card p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.category-card button {
+  background-color: #F2CC8F;
+  color: #3D405B;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+}
+
+.category-card button:hover {
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Error message */
+.error {
+  color: #E07A5F;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}

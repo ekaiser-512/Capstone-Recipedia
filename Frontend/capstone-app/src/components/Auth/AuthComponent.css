@@ -1,10 +1,12 @@
 .login-signup-container {
-width: 50%;
-border: 1px solid #3333339d;
-padding: 2rem;
-box-shadow: 2px 2px 20px #333;
-margin-bottom: 30px;
-
+    width: 80%;
+    max-width: 800px; /* Added max-width for responsiveness */
+    border: 1px solid #3333339d;
+    padding: 2rem;
+    box-shadow: 2px 2px 20px #333;
+    margin: 30px auto; /* Centered the container */
+    background-color: #f9f9f9; /* Added background color for better contrast */
+    border-radius: 10px; /* Added border radius for rounded corners */
 }
 
 .login-signup-container h2 {
@@ -12,43 +14,55 @@ margin-bottom: 30px;
     border-bottom: 2px solid #333;
     padding-bottom: 10px;
     text-align: center;
+    margin-bottom: 20px; /* Added margin for better spacing */
 }
 
 .common-form {
     display: flex;
     flex-direction: column;
-    gap: 20px; 
+    gap: 20px;
 }
 
 .common-form div {
     display: flex;
-    justify-content: space-between;
-    padding: 0 5rem;
+    flex-direction: column; /* Changed to column for better alignment */
+    padding: 0 2rem; /* Adjusted padding for better fit */
     font-size: 20px;
 }
 
+.common-form div label {
+    margin-bottom: 5px; /* Added margin for better spacing */
+}
+
 .common-form div input {
-    height: 25px;
+    height: 35px; /* Increased height for better usability */
     border-radius: 5px;
     border: 1px solid #33333369;
+    padding: 0 10px; /* Added padding for better spacing */
+    width: 100%; /* Made input fields take full width */
+    max-width: 100%; /* Ensured input fields fit within the container */
 }
 
 .common-form button {
     align-self: center;
-}
-
-.Auth .button {
-    background-color: #F2CC8F;
+    background-color: #F2CC8F; /* Consistent with .Auth .button */
     border-radius: 15px;
     color: #3D405B;
-    list-style: none;
-    display: block;
-    margin: 0 auto;
     padding: 10px 20px;
     width: auto;
     height: auto;
-  }
+    border: none; /* Removed default border */
+    cursor: pointer; /* Added cursor pointer for better UX */
+    transition: box-shadow 0.3s; /* Added transition for smooth hover effect */
+}
 
-  .Auth .button:hover {
-    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
-  }
+.common-form button:hover {
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2); /* Consistent with .Auth .button:hover */
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px; /* Added margin for better spacing */
+}
+
