@@ -1,13 +1,21 @@
+
+import { useNavigate } from 'react-router-dom';
+
 import "./CategoryCard.css"
 
-const CategoryCard = ({image, alt, categoryTitle }) => {
-    return (
-      <div className="category-card">
-        <img src={image} alt={alt} />
-        <h3>{categoryTitle}</h3>
-        <Button>See Recipes</Button>
-      </div>
-    );
-  };
+const CategoryCard = ({ image, alt, categoryTitle, categoryId }) => {
+  const navigate = useNavigate();
   
-  export default CategoryCard;
+  const onClick = (event) => {
+    navigate(`/categories/${categoryId}`)
+  }
+
+  return (
+    <div className="category-card" onClick={onClick}>
+      <img src={image} alt={alt} />
+      <h3>{categoryTitle}</h3>
+    </div>
+  );
+};
+  
+export default CategoryCard;

@@ -10,7 +10,7 @@ import './Auth.css'
 const Auth = () => {
 
     const navigate = useNavigate();
-    const {currentUserFirstName, setCurrentUserFirstName, currentBook, setCurrentBook} = useContext(AuthContext)
+    const {currentUser, setCurrentUser} = useContext(AuthContext)
     const [isLogin, setIsLogin] = useState(true)
     const [isSetup, setIsSetup] = useState(true)
     const [errorMessage, setErrorMessage] = useState(null)
@@ -34,8 +34,8 @@ const Auth = () => {
         if(response.hasError) {
             setErrorMessage(response.message)
         } else {
-            setCurrentUserFirstName(response.data.firstName)
-            setCurrentBook(response.data.book)
+            setCurrentUser(response.data)
+            console.log("response.data.book", response.data.book)
             navigate("/home")
         }
     
@@ -47,7 +47,7 @@ const Auth = () => {
         if(response.hasError) {
             setErrorMessage(response.message)
         } else {
-            setCurrentUserFirstName(response.data.firstName)
+            setCurrentUser(response.data)
             setErrorMessage(null)
             navigate("/home")
         }

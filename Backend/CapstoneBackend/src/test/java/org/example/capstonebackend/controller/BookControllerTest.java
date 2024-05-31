@@ -160,12 +160,12 @@ public class BookControllerTest {
         // Act & Assert
         mockMvc.perform(get("/books/{id}/categories", bookId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray()) // Check if the response is an array
-                .andExpect(jsonPath("$", hasSize(2))) // Check if the array has size 2
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].title").value("Soups"))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].title").value("Dessert"));
+                .andExpect(jsonPath("$.data").isArray()) // Check if the response is an array
+                .andExpect(jsonPath("$.data", hasSize(2))) // Check if the array has size 2
+                .andExpect(jsonPath("$.data[0].id").value(1))
+                .andExpect(jsonPath("$.data[0].title").value("Soups"))
+                .andExpect(jsonPath("$.data[1].id").value(2))
+                .andExpect(jsonPath("$.data[1].title").value("Dessert"));
     }
 
 //UPDATE

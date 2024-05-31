@@ -5,6 +5,7 @@ import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.repository.IBookRepository;
 import org.example.capstonebackend.repository.ICategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,22 @@ public class BookService {
 
         return book;
     }
+    public Book createCategoryForBook(Integer bookId, String title) throws Exception {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new Exception("Book with id " + bookId + " not found"));
+        Category category = new Category();
+
+        category.setTitle(title);
+        category.setBook(book);
+        List<Category> existingCategories = book.getCategories();
+        existingCategories.add(category);
+        book.setCategories(existingCategories);
+
+        bookRepository.save(book);
+        categoryRepository.save(category);
+
+        return book;
+
+    }
 
 //READ
     //get book by id
@@ -85,9 +102,6 @@ public class BookService {
     public void deleteBook(int id) {
         bookRepository.deleteById(id);
     }
-
-
-
 
 
 }

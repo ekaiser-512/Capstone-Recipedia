@@ -1,6 +1,8 @@
 package org.example.capstonebackend.controller;
 
 import org.apache.coyote.Response;
+import org.example.capstonebackend.DTO.CommonResponseDTO;
+import org.example.capstonebackend.DTO.CreateCategoryForBookDTO;
 import org.example.capstonebackend.model.Book;
 import org.example.capstonebackend.model.Category;
 import org.example.capstonebackend.service.BookService;
@@ -34,12 +36,24 @@ public class BookController {
 
     //add category to book (may be able to delete at end) todo
     @PostMapping("/books/{id}/categories/{categoryId}")
-    public ResponseEntity<Book> addCategoryToBook(@PathVariable Integer id, @PathVariable Integer categoryId) throws Exception {
+    public ResponseEntity<Book> addCategoryToBook(@PathVariable Integer id, @PathVariable Integer categoryId) {
         try {
             Book book = bookService.addCategoryToBook(id, categoryId);
             return ResponseEntity.ok().body(book);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("/books/{id}/categories")
+    public ResponseEntity<?> createCategoryForBook(@PathVariable Integer id, @RequestBody CreateCategoryForBookDTO createCategoryForBookDTO) {
+        try {
+            Book book = bookService.createCategoryForBook(id, createCategoryForBookDTO.getTitle());
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(false).data(book.getCategories()).status(HttpStatus.OK).build();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(true).message("failed to retrieve category").status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
@@ -55,14 +69,16 @@ public class BookController {
         }
     }
 
-    //get all categories in book (may be able to delete at end) todo
+    //get all categories in book
     @GetMapping("/books/{id}/categories")
     public ResponseEntity<?> getAllCategoriesInBook(@PathVariable Integer id) throws Exception {
         try {
             List<Category> categories = bookService.getAllCategoriesInBook(id);
-            return ResponseEntity.ok(categories);
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(false).data(categories).status(HttpStatus.OK).build();
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("failed to retrieve categories in book");
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(true).message("failed to retrieve categories in book").status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 

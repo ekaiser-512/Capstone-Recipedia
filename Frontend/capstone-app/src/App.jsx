@@ -4,6 +4,7 @@ import Auth from "./containers/Auth/Auth";
 import Header from "./containers/Header/Header";
 import Home from "./containers/Home/Home";
 import CreateRecipe from "./containers/CreateRecipe/CreateRecipe";
+import Category from "./components/Category/Category";
 import ProfileContainer from "./containers/Profile/ProfileContainer";
 import Search from "./containers/Search/Search";
 import { useState, useEffect } from "react";
@@ -13,8 +14,7 @@ import { AuthContext } from "./contexts/AuthContext";
 import "./App.css";
 
 const App = () => {
-  const[currentUserFirstName, setCurrentUserFirstName] = useState(null)
-  const[currentBook, setCurrentBook] = useState(null)
+  const[currentUser, setCurrentUser] = useState(null)
   const[theme, setTheme] = useState("light")
 
   useEffect(() => {
@@ -34,12 +34,12 @@ const App = () => {
 
   const updateUser = (updatedData) => {
     // Logic to update user profile
-    setCurrentUserFirstName(updatedData.firstName);
+    setCurrentUser(updatedData);
     // Update other user data as needed bg-[F4F1DE]
   };
 
   return (
-    <AuthContext.Provider value={{currentUserFirstName, setCurrentUserFirstName, currentBook, setCurrentBook}}>
+    <AuthContext.Provider value={{currentUser, setCurrentUser}}>
     <ThemeContext.Provider value ={{theme, setTheme: toggleTheme}}>
     <main className={theme}>
       <Header/>
@@ -49,7 +49,7 @@ const App = () => {
         <Route path="/createrecipe" element={<CreateRecipe />} />
         <Route path="/search" element={<Search />} />
         <Route path="/profile" element={<ProfileContainer />} />
-        {/* currentUser={{ firstName: currentUserFirstName }} updateUser={updateUser}  */}
+        <Route path="/categories/:categoryId" element={<Category />} />
       </Routes>
       <Footer />
     </main>

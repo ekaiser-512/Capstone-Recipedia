@@ -1,7 +1,7 @@
 import React from 'react';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
-import "./Auth.css"
+
 
 const Login = ({loginFormData, setLoginFormData, handleLogin}) => {
     

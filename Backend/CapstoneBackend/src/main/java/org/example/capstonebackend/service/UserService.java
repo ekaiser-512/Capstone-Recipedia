@@ -1,6 +1,8 @@
 package org.example.capstonebackend.service;
 
+import org.example.capstonebackend.model.Book;
 import org.example.capstonebackend.model.User;
+import org.example.capstonebackend.repository.IBookRepository;
 import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.utils.ModelMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     IUserRepository userRepository;
+
+    @Autowired
+    IBookRepository bookRepository;
 
     @Autowired
     ModelMapperUtil modelMapperUtil;
@@ -41,6 +46,29 @@ public class UserService {
             throw new RuntimeException("The provided password is incorrect");
         }
         return existingUser;
+    }
+
+    public User addBookToUser(Integer userId, Integer bookId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("User with id " + userId + " not found"));
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new Exception("Book with id " + bookId + " not found"));
+
+        user.setBook(book);
+
+        userRepository.save(user);
+
+        return user;
+    }
+
+    public User createBookForUser(Integer userId, String title) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(() -> new Exception("User with id " + userId + " not found"));
+        Book book = new Book();
+
+        book.setTitle(title);
+        user.setBook(book);
+
+        userRepository.save(user);
+
+        return user;
     }
 
 //READ
@@ -79,4 +107,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User with id " + id + " not found"));
         userRepository.delete(user);
     }
+
+
+
 }

@@ -1,37 +1,56 @@
 .profile-container {
-    width: 50%;
-    border: 1px solid #3333339d;
-    padding: 2rem;
-    box-shadow: 2px 2px 20px #333;
-    margin-bottom: 30px;
-  }
-  
-  .profile-container h2 {
-    font-size: 30px;
-    border-bottom: 2px solid #333;
-    padding-bottom: 10px;
-    text-align: center;
-  }
-  
-  .common-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .common-form div {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 5rem;
-    font-size: 20px;
-  }
-  
-  .common-form div input {
-    height: 25px;
-    border-radius: 5px;
-    border: 1px solid #33333369;
-  }
-  
-  .common-form button {
-    align-self: center;
-  }
+  width: 50%; /* Consistent with .login-signup-container */
+  border: 1px solid #3333339d;
+  padding: 2rem;
+  box-shadow: 2px 2px 20px #333;
+  margin-bottom: 30px;
+}
+
+.profile-container h2 {
+  font-size: 30px;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.common-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Consistent with .common-form */
+}
+
+.common-form div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5rem;
+  font-size: 20px;
+}
+
+.common-form div input {
+  height: 25px; /* Consistent with .common-form div input */
+  border-radius: 5px;
+  border: 1px solid #33333369;
+}
+
+.common-form button {
+  align-self: center;
+  background-color: #F2CC8F; /* Consistent with .Auth .button */
+  border-radius: 15px;
+  color: #3D405B;
+  padding: 10px 20px;
+  width: auto;
+  height: auto;
+  border: none; /* Added to remove default button border */
+  cursor: pointer; /* Added for better UX */
+  transition: box-shadow 0.3s; /* Added for smooth hover effect */
+}
+
+.common-form button:hover {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2); /* Consistent with .Auth .button:hover */
+}
+
+.error {
+  color: red;
+  text-align: center;
+  margin-bottom: 20px; /* Added margin for better spacing */
+}

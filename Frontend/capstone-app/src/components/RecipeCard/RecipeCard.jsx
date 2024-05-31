@@ -1,3 +1,5 @@
+import Button from "../Button/Button";
+
 import "./RecipeCard.css"
 
 const RecipeCard = ({image, alt, recipeName, recipeAuthor }) => {
@@ -6,7 +8,7 @@ const RecipeCard = ({image, alt, recipeName, recipeAuthor }) => {
       <img src={image} alt={alt} />
       <h3>{recipeName}</h3>
       <p>{recipeAuthor}</p>
-      <Button>Recipe Details</Button>
+      <Button text="Recipe Details"/>
     </div>
   );
 };

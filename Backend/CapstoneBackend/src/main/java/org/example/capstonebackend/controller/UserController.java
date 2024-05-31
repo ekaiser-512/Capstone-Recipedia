@@ -2,7 +2,9 @@ package org.example.capstonebackend.controller;
 
 import org.apache.coyote.Response;
 import org.example.capstonebackend.DTO.CommonResponseDTO;
+import org.example.capstonebackend.DTO.CreateBookForUserDTO;
 import org.example.capstonebackend.DTO.UserUpdateDTO;
+import org.example.capstonebackend.model.Book;
 import org.example.capstonebackend.model.User;
 import org.example.capstonebackend.repository.IUserRepository;
 import org.example.capstonebackend.service.UserService;
@@ -37,6 +39,29 @@ public class UserController {
             return ResponseEntity.status(404).body(null);
         }
     }
+
+    @PostMapping("/users/{userId}/books/{bookId}")
+    public ResponseEntity<?> addBookToUser(@PathVariable Integer userId, @PathVariable Integer bookId) {
+        try {
+            User user = userService.addBookToUser(userId, bookId);
+            return ResponseEntity.ok().body(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping("users/{userId}/books")
+    public ResponseEntity<?> createBookForUser(@PathVariable Integer userId, @RequestBody CreateBookForUserDTO createBookForUserDTO) {
+        try {
+            User user = userService.createBookForUser(userId, createBookForUserDTO.getTitle());
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(false).data(user.getBook()).status(HttpStatus.OK).build();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            CommonResponseDTO response = CommonResponseDTO.builder().hasError(true).message("failed to retrieve book").status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+    }
+
 
     //get user by email
     @GetMapping("/users/email/{email}")

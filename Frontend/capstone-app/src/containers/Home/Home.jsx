@@ -1,84 +1,111 @@
 import{ useState, useContext, useEffect } from 'react';
-import Hero from '../../components/Hero/Hero';
 import Category from '../../components/Category/Category';
 import './Home.css'
 import Button from '../../components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
 import { getData } from '../../api/api';
+import { postData } from '../../api/api';
+import DisplayCategories from '../../components/DisplayCategories/DisplayCategories';
+import Input from '../../components/Input/Input';
 
 
 const Home = () => {
     const navigate = useNavigate();
-    const {currentUserFirstName, setCurrentUserFirstName, currentBook, setCurrentBook} = useContext(AuthContext)
-    const [categories, setCategories] = useState(true);
-    const [createBook, setCreateBook] = useState(true);
-    const [createCategory, setCreateCategory] = useState(true);
+    const {currentUser, setCurrentUser} = useContext(AuthContext)
+    const [errorMessage, setErrorMessage] = useState(null)
+    const [categories, setCategories] = useState([]);
     const [bookFormData, setBookFormData] = useState({
         title:""
     })
-    const [categoryFormData, setCategoryFormData] = useState({
-        title:""
-    })
+    
 
     useEffect(() => {
-        checkLogin(currentUserFirstName, navigate)
-        getBook(currentBook)
-
+        checkLogin(currentUser, navigate)
+        if (currentUser && currentUser.book) {
+            getCategories(currentUser.book.id)
+        } 
     }, []);
 
-    const checkLogin = (currentUserFirstName, navigate) => {
-        if(!currentUserFirstName || currentUserFirstName == "") {
+    const checkLogin = (currentUser, navigate) => {
+        if(!currentUser) {
             navigate("/") 
         }
     }
 
-    const onCreateBookButton = (event) => {
-
-    }
-
-    const onCreateCategoryButton = (event) => {
-        
-    }
-
-    const getBook = async (currentBook) => {
-        const response = await getData("books/" + currentBook, bookFormData)
-        console.log("get book", response);
+    const getCategories = async (bookId) => {
+        const response = await getData(`books/${bookId}/categories`)
+        console.log("getAllCategoriesInBook: response", response);
         if(response.hasError) {
             setErrorMessage(response.message)
         } else {
-            setCurrentBook(response.data)
+            setCategories(response.data)
+            console.log("response.data", response.data)
+        }
+
+    }
+
+    // meant to be used by DisplayCategories component
+    const createCategory = async (categoryFormData) => {
+        const response = await postData(`books/${currentUser.book.id}/categories`, categoryFormData.title)
+        console.log("addCategoryToBook: response", response);
+        if(response.hasError) {
+            setErrorMessage(response.message)
+        } else {
+            currentUser.book.categories = response.data
+            setCategories([...categories, response.data]);
+            navigate("/home")
         }
     }
 
-    const toggleBookMode = (event) => {
-        setCreateBook(!createBook)
-        setErrorMessage(null)
+    const createBook = async (userId) => {
+        const response = await postData(`users/${userId}/books`, bookFormData.title)
+        console.log("addBookToUser: response", response);
+        if(response.hasError) {
+            setErrorMessage(response.message)
+        } else {
+            currentUser.book = response.data
+            setCurrentUser(currentUser)
+        }
+
     }
 
-    const toggleCategoryMode = (event) => {
-        setCategories(!categories)
-        setErrorMessage(null)
+    const onCreateBookButton = (event) => {
+        createBook(currentUser.userId)
+        navigate("/")
     }
 
+    const handleBookForm = (event) => {
+        const{ name, value } = event.target;
+        setBookFormData((prevFormData)=> ({
+            ...prevFormData, 
+            [name]: value //
+        }))
+    }
 
     return (
-        <div className='Home'>
-        <h2> Welcome to Recipedia</h2>
-        <Hero>Book Title
-            {/* {currentBook === null && ( */}
-            <Button handleClick={onCreateBookButton} text = "Create a Book" style="button-light" />
-            </Hero>
-        <section className="category-container">
-            <div>
-                <Button handleClick={onCreateCategoryButton} text="Create a Category" style="button-dark" />
-                <Category>Category Cards Go Here</Category>
+        <>
+        {
+            errorMessage && <h4 className="error">{errorMessage}</h4>
+        }
+        {currentUser ?  (
                 
-            </div>
-        </section>
-
-
-        </div>
+            currentUser.book == null ? (
+                <>
+                    <Input label="Title: " type="text" name="title" required onChange={handleBookForm} />
+                    <Button handleClick={onCreateBookButton} text = "Create a Book" style="button-light" />
+                </>
+            ) : (
+                <div>
+                    <h1>{currentUser.book.title}</h1>
+                    <DisplayCategories categories={categories} createCategory={createCategory}/>
+                </div>
+                
+            )
+        ) : null }
+        </>
     )
+
+
 }
 export default Home;
